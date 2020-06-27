@@ -13,7 +13,7 @@ void main() {
         ),
         debugShowCheckedModeBanner: false,
         routes: <String, Widget Function(BuildContext)>{
-          '/': (_) => const FeedScreen(),
+          '/': (_) => const AuthGuard(FeedScreen()),
           '/auth': (_) => const AuthScreen(),
           '/counter': (_) => const CounterScreen(),
         },

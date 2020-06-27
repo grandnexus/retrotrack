@@ -32,6 +32,8 @@ dependencies:
   # state management
   riverpod: ^0.1.0
   flutter_riverpod: ^0.1.0
+  # flutter_hooks:
+  # hooks_riverpod:
 
 dev_dependencies:
   flutter_test:
