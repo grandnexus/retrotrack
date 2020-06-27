@@ -25,7 +25,7 @@ Future<void> main() async {
             ThemeData.dark().textTheme,
           ),
           buttonTheme: const ButtonThemeData(
-            height: 56,
+            // height: 56,
             splashColor: Colors.transparent,
             textTheme: ButtonTextTheme.primary,
             shape: BeveledRectangleBorder(),
@@ -41,6 +41,7 @@ Future<void> main() async {
             ),
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
+            splashColor: Colors.transparent,
           ),
 
           //
