@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 class BoundingBoxPainter extends CustomPainter {
@@ -7,7 +9,7 @@ class BoundingBoxPainter extends CustomPainter {
   });
 
   List<Rect> rect;
-  var imageFile;
+  ui.Image imageFile;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -15,7 +17,7 @@ class BoundingBoxPainter extends CustomPainter {
       canvas.drawImage(imageFile, Offset.zero, Paint());
     }
 
-    for (Rect rectangle in rect) {
+    for (final Rect rectangle in rect) {
       canvas.drawRect(
         rectangle,
         Paint()

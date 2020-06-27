@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as dartImage;
+import 'package:image/image.dart' as dart_image;
 import 'package:retrotrack/models.dart';
 import 'package:retrotrack/paints.dart';
 
@@ -30,39 +30,39 @@ double convertRawTextToTemperature(String rawText) {
 }
 
 Future<LogEntry> processCropFaceImage(File imageFile) async {
-  DateTime now = DateTime.now();
-  List<Image> images = <Image>[];
-  List<Rect> boundingBoxes = <Rect>[];
-  List<Person> people = <Person>[];
+  final DateTime now = DateTime.now();
+  final List<Image> images = <Image>[];
+  final List<Rect> boundingBoxes = <Rect>[];
+  final List<Person> people = <Person>[];
 
-  Uint8List uImage = await imageFile.readAsBytes();
+  final Uint8List uImage = await imageFile.readAsBytes();
 
-  ui.Image image = await decodeImageFromList(uImage);
-  dartImage.Image dImage = dartImage.decodeJpg(uImage);
+  final ui.Image image = await decodeImageFromList(uImage);
+  final dart_image.Image dImage = dart_image.decodeJpg(uImage);
   final FirebaseVisionImage visionImage =
       FirebaseVisionImage.fromFile(imageFile);
   final FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
   final List<Face> detectedFaces = await faceDetector.processImage(visionImage);
 
-  for (Face face in detectedFaces) {
+  for (final Face face in detectedFaces) {
     boundingBoxes.add(face.boundingBox);
-    Image croppedImage = Image.memory(
-      dartImage.encodeJpg(
-        dartImage.copyCrop(
-          dImage,
-          face.boundingBox.topLeft.dx.toInt(),
-          face.boundingBox.topLeft.dy.toInt(),
-          face.boundingBox.width.toInt(),
-          face.boundingBox.height.toInt(),
-        ),
+
+    final List<int> jpgInt = dart_image.encodeJpg(
+      dart_image.copyCrop(
+        dImage,
+        face.boundingBox.topLeft.dx.toInt(),
+        face.boundingBox.topLeft.dy.toInt(),
+        face.boundingBox.width.toInt(),
+        face.boundingBox.height.toInt(),
       ),
     );
+    final Image croppedImage = Image.memory(jpgInt as Uint8List);
 
     images.add(croppedImage);
     people.add(Person(1, now, croppedImage));
   }
 
-  LogEntry logEntry = LogEntry(
+  final LogEntry logEntry = LogEntry(
     CustomPaint(
       painter: BoundingBoxPainter(
         rect: boundingBoxes,
@@ -86,20 +86,17 @@ Future<Temperature> processThermometerImage(File imageFile) async {
   bool isTemperatureFound = false;
   Temperature temperature;
 
-  Uint8List uImage = await imageFile.readAsBytes();
-
-  ui.Image image = await decodeImageFromList(uImage);
-  dartImage.Image dImage = dartImage.decodeJpg(uImage);
+  final Uint8List uImage = await imageFile.readAsBytes();
+  final ui.Image image = await decodeImageFromList(uImage);
+  final dart_image.Image dImage = dart_image.decodeJpg(uImage);
   final FirebaseVisionImage visionImage =
       FirebaseVisionImage.fromFile(imageFile);
   final TextRecognizer textRecognizer =
       FirebaseVision.instance.textRecognizer();
   final VisionText visionText = await textRecognizer.processImage(visionImage);
 
-  for (TextBlock block in visionText.blocks) {
+  for (final TextBlock block in visionText.blocks) {
     boundingBox = block.boundingBox;
-
-    print(block.text);
 
     final double tempCandidate = convertRawTextToTemperature(block.text);
 
@@ -108,17 +105,17 @@ Future<Temperature> processThermometerImage(File imageFile) async {
       isTemperatureFound = true;
       temperatureString = block.text;
       temperatureValue = tempCandidate;
-      croppedImage = Image.memory(
-        dartImage.encodeJpg(
-          dartImage.copyCrop(
-            dImage,
-            block.boundingBox.topLeft.dx.toInt(),
-            block.boundingBox.topLeft.dy.toInt(),
-            block.boundingBox.width.toInt(),
-            block.boundingBox.height.toInt(),
-          ),
+
+      final List<int> jpgInt = dart_image.encodeJpg(
+        dart_image.copyCrop(
+          dImage,
+          block.boundingBox.topLeft.dx.toInt(),
+          block.boundingBox.topLeft.dy.toInt(),
+          block.boundingBox.width.toInt(),
+          block.boundingBox.height.toInt(),
         ),
       );
+      croppedImage = Image.memory(jpgInt as Uint8List);
     }
   }
 
@@ -127,7 +124,7 @@ Future<Temperature> processThermometerImage(File imageFile) async {
       croppedImage,
       CustomPaint(
         painter: BoundingBoxPainter(
-          rect: [boundingBox],
+          rect: <Rect>[boundingBox],
           imageFile: image,
         ),
       ),
