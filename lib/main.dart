@@ -19,6 +19,8 @@ Future<void> main() async {
           primaryColor: Colors.green,
           primaryColorLight: Colors.green[300],
           scaffoldBackgroundColor: Colors.black,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.grey[900],
 
           //
           textTheme: GoogleFonts.sourceCodeProTextTheme(
@@ -42,6 +44,12 @@ Future<void> main() async {
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
             splashColor: Colors.transparent,
+          ),
+          dialogTheme: const DialogTheme(
+            shape: BeveledRectangleBorder(
+              side: BorderSide(color: Colors.green),
+            ),
+            backgroundColor: Colors.black,
           ),
 
           //

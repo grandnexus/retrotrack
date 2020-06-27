@@ -18,6 +18,7 @@ dependencies:
   image: ^2.1.13
   image_picker: ^0.6.7+2
   google_fonts: ^1.1.0
+  snappable: ^1.0.1
 
   # state management
   riverpod: ^0.1.0

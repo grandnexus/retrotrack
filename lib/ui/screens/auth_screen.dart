@@ -26,15 +26,12 @@ class AuthScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               //
-              OutlineButton(
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColorLight,
-                ),
+              RetroOutlineButton(
                 onPressed: () {
                   sessionProvider.read(context).state =
                       const SessionProvider(isAuth: true);
                 },
-                child: const Text('LOGIN'),
+                text: 'login',
               ),
             ],
           ),

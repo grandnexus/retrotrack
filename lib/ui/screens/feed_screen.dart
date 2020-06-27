@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrotrack/core/index.dart';
 import 'package:retrotrack/ui/index.dart';
+import 'package:snappable/snappable.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen();
@@ -18,40 +19,47 @@ class FeedScreen extends StatelessWidget {
             Expanded(
               child: ScrollConfiguration(
                 behavior: const NoneScrollBehavior(),
-                child: ListView.separated(
-                  itemCount: 25,
-                  separatorBuilder: (_, __) => const Divider(
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text('Person $index'.toUpperCase()),
-                      trailing: const Text('37.0\u2103'),
-                    );
-                  },
-                ),
+                child: Consumer((_, Reader read) {
+                  final List<int> list = read(listProvider).state;
+
+                  return ListView.separated(
+                    itemCount: list.length,
+                    separatorBuilder: (_, __) => const Divider(
+                      indent: 16,
+                      endIndent: 16,
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      final GlobalKey<SnappableState> key =
+                          GlobalKey<SnappableState>();
+
+                      return Snappable(
+                        key: key,
+                        child: ListTile(
+                          onLongPress: () async {
+                            final bool res = await showDialog<bool>(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => _DeleteDialog(),
+                            );
+                            if (res) {
+                              key.currentState.snap().then((_) {
+                                listProvider.read(context).state.remove(index);
+                              });
+                            }
+                          },
+                          title: Text('Person $index'.toUpperCase()),
+                          trailing: const Text('37.0\u2103'),
+                        ),
+                      );
+                    },
+                  );
+                }),
               ),
             )
           ],
         ),
       ),
       floatingActionButton: const _FAB(),
-    );
-  }
-}
-
-class _LogoutButton extends StatelessWidget {
-  const _LogoutButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.exit_to_app),
-      onPressed: () {
-        sessionProvider.read(context).state =
-            const SessionProvider(isAuth: false);
-      },
     );
   }
 }
@@ -67,6 +75,46 @@ class _FAB extends StatelessWidget {
       },
       label: const Text('ENTRY'),
       icon: const Icon(Icons.add),
+    );
+  }
+}
+
+class _DeleteDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text(
+        'REMOVE RECORD',
+        textAlign: TextAlign.center,
+      ),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          RetroOutlineButton(
+            text: 'no',
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          RetroOutlineButton(
+            text: 'yes',
+            onPressed: () => Navigator.pop(context, true),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LogoutButton extends StatelessWidget {
+  const _LogoutButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.exit_to_app),
+      onPressed: () {
+        sessionProvider.read(context).state =
+            const SessionProvider(isAuth: false);
+      },
     );
   }
 }
