@@ -31,9 +31,10 @@ dependencies:
 
   # state management
   riverpod: ^0.1.0
-  flutter_riverpod: ^0.1.0
-  # flutter_hooks:
-  # hooks_riverpod:
+  flutter_riverpod: ^0.1.0 
+  camera: ^0.5.8+2
+  path_provider: ^1.6.11
+  path: ^1.7.0
 
 dev_dependencies:
   flutter_test:

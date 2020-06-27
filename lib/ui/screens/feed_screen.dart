@@ -10,16 +10,40 @@ class FeedScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Feed Screen'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              sessionProvider.read(context).state =
-                  const SessionProvider(isAuth: false);
-            },
-          ),
-        ],
+        actions: const <Widget>[_LogoutButton()],
       ),
+      floatingActionButton: const _FAB(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+}
+
+class _LogoutButton extends StatelessWidget {
+  const _LogoutButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.exit_to_app),
+      onPressed: () {
+        sessionProvider.read(context).state =
+            const SessionProvider(isAuth: false);
+      },
+    );
+  }
+}
+
+class _FAB extends StatelessWidget {
+  const _FAB();
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        Navigator.pushNamed(context, '/camera');
+      },
+      label: const Text('Entry'),
+      icon: const Icon(Icons.add),
     );
   }
 }
