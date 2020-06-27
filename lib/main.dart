@@ -19,6 +19,7 @@ Future<void> main() async {
           primaryColor: Colors.green,
           primaryColorLight: Colors.green[300],
           scaffoldBackgroundColor: Colors.black,
+          splashColor: Colors.transparent,
 
           //
           textTheme: GoogleFonts.sourceCodeProTextTheme(
