@@ -42,10 +42,9 @@ class FeedScreen extends StatelessWidget {
                               builder: (_) => _DeleteDialog(),
                             );
                             if (res) {
-                              key.currentState.snap().then((_) => listProvider
-                                  .read(context)
-                                  .state
-                                  .removeAt(index));
+                              key.currentState.snap().then((_) {
+                                listProvider.read(context).state.remove(index);
+                              });
                             }
                           },
                           title: Text('Person $index'.toUpperCase()),
@@ -91,12 +90,12 @@ class _DeleteDialog extends StatelessWidget {
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          RaisedButton(
-            child: const Text('NO'),
+          RetroOutlineButton(
+            text: 'no',
             onPressed: () => Navigator.pop(context, false),
           ),
-          RaisedButton(
-            child: const Text('YES'),
+          RetroOutlineButton(
+            text: 'yes',
             onPressed: () => Navigator.pop(context, true),
           ),
         ],
