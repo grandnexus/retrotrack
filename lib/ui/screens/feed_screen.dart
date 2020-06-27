@@ -9,41 +9,30 @@ class FeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          margin: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            border: Border(
-              left: BorderSide(color: Theme.of(context).primaryColor),
-              top: BorderSide(color: Theme.of(context).primaryColor),
-              right: BorderSide(color: Theme.of(context).primaryColor),
-              bottom: BorderSide(color: Theme.of(context).primaryColor),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const Logo(),
-              const Divider(),
-              Expanded(
-                child: ScrollConfiguration(
-                  behavior: const NoneScrollBehavior(),
-                  child: ListView.separated(
-                    itemCount: 25,
-                    separatorBuilder: (_, __) => const Divider(
-                      indent: 16,
-                      endIndent: 16,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        title: Text('item $index'),
-                      );
-                    },
+      body: RetroBody(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            const Logo(),
+            const Divider(),
+            Expanded(
+              child: ScrollConfiguration(
+                behavior: const NoneScrollBehavior(),
+                child: ListView.separated(
+                  itemCount: 25,
+                  separatorBuilder: (_, __) => const Divider(
+                    indent: 16,
+                    endIndent: 16,
                   ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text('item $index'),
+                    );
+                  },
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
       floatingActionButton: const _FAB(),

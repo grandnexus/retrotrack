@@ -6,3 +6,4 @@ export 'widgets/auth_guard.dart';
 export 'widgets/logo.dart';
 export 'widgets/none_scroll_behavior.dart';
 export 'widgets/redirect.dart';
+export 'widgets/retro_body.dart';

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:retrotrack/core/index.dart';
+import 'package:retrotrack/ui/index.dart';
 
 enum Selection { person, temperature, done }
 
@@ -42,9 +43,9 @@ class CameraScreenState extends State<CameraScreen> {
   String _getFABText() {
     switch (currentSelection) {
       case Selection.person:
-        return 'TAKE PERSON';
+        return 'PERSON';
       case Selection.temperature:
-        return 'TAKE TEMPERATURE';
+        return 'TEMPERATURE';
       default:
         return 'SAVE';
     }
@@ -54,53 +55,55 @@ class CameraScreenState extends State<CameraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (_, AsyncSnapshot<void> snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: RetroBody(
+        child: FutureBuilder<void>(
+          future: _initializeControllerFuture,
+          builder: (_, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          return Stack(
-            alignment: Alignment.bottomCenter,
-            children: <Widget>[
-              CameraPreview(_controller),
+            return Stack(
+              alignment: Alignment.bottomCenter,
+              children: <Widget>[
+                CameraPreview(_controller),
 
-              // Preview
-              Row(
-                children: <Widget>[
-                  if (path1 != null)
-                    GestureDetector(
-                      onTap: () => setState(() {
-                        currentSelection = Selection.person;
-                      }),
-                      child: _FileDisplay(
-                        path1,
-                        'PERSON',
-                        currentSelection == Selection.person,
+                // Preview
+                Row(
+                  children: <Widget>[
+                    if (path1 != null)
+                      GestureDetector(
+                        onTap: () => setState(() {
+                          currentSelection = Selection.person;
+                        }),
+                        child: _FileDisplay(
+                          path1,
+                          'PERSON',
+                          currentSelection == Selection.person,
+                        ),
                       ),
-                    ),
-                  if (path2 != null)
-                    GestureDetector(
-                      onTap: () => setState(() {
-                        currentSelection = Selection.temperature;
-                      }),
-                      child: _FileDisplay(
-                        path2,
-                        'TEMP.',
-                        currentSelection == Selection.temperature,
+                    if (path2 != null)
+                      GestureDetector(
+                        onTap: () => setState(() {
+                          currentSelection = Selection.temperature;
+                        }),
+                        child: _FileDisplay(
+                          path2,
+                          'TEMP.',
+                          currentSelection == Selection.temperature,
+                        ),
                       ),
-                    ),
-                ],
-              ),
-            ],
-          );
-        },
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        // icon: currentSelection != Selection.done
-        //     ? const Icon(Icons.camera_alt)
-        //     : const Icon(Icons.save),
+        icon: currentSelection != Selection.done
+            ? const Icon(Icons.camera_alt)
+            : const Icon(Icons.save),
         label: Text(_getFABText()),
         onPressed: () async {
           if (currentSelection == Selection.done) {
