@@ -26,7 +26,8 @@ class FeedScreen extends StatelessWidget {
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      title: Text('item $index'),
+                      title: Text('Person $index'.toUpperCase()),
+                      trailing: const Text('37.0\u2103'),
                     );
                   },
                 ),
