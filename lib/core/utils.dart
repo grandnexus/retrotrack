@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart' as dart_image;
 import 'package:retrotrack/core/models.dart';
 import 'package:retrotrack/core/paints.dart';
@@ -154,4 +155,14 @@ Future<Temperature> processThermometerImage(File imageFile) async {
   textRecognizer.close();
 
   return temperature;
+}
+
+Future<File> compressImageFile(File file, String targetPath) async {
+  final File result = await FlutterImageCompress.compressAndGetFile(
+    file.absolute.path,
+    targetPath,
+    quality: 100,
+  );
+
+  return result;
 }

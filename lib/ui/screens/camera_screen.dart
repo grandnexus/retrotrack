@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:retrotrack/core/index.dart';
+import 'package:retrotrack/core/models.dart';
 import 'package:retrotrack/ui/index.dart';
 
 enum Selection { person, temperature, done }
@@ -25,11 +26,13 @@ class CameraScreenState extends State<CameraScreen> {
   String path1;
   String path2;
   Selection currentSelection;
+  LogEntry logEntry;
+  Temperature temperature;
 
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(widget.camera, ResolutionPreset.high);
+    _controller = CameraController(widget.camera, ResolutionPreset.medium);
     _initializeControllerFuture = _controller.initialize();
     currentSelection = Selection.person;
   }
@@ -71,25 +74,25 @@ class CameraScreenState extends State<CameraScreen> {
                 // Preview
                 Row(
                   children: <Widget>[
-                    if (path1 != null)
+                    if (logEntry != null)
                       GestureDetector(
                         onTap: () => setState(() {
                           currentSelection = Selection.person;
                         }),
-                        child: _FileDisplay(
-                          path1,
-                          'PERSON',
+                        child: _ImageDisplay(
+                          logEntry,
+                          'Person',
                           currentSelection == Selection.person,
                         ),
                       ),
-                    if (path2 != null)
+                    if (temperature != null)
                       GestureDetector(
                         onTap: () => setState(() {
                           currentSelection = Selection.temperature;
                         }),
-                        child: _FileDisplay(
-                          path2,
-                          'TEMP.',
+                        child: _TemperatureImageDisplay(
+                          temperature,
+                          temperature.temperature.toString(),
                           currentSelection == Selection.temperature,
                         ),
                       ),
@@ -111,21 +114,37 @@ class CameraScreenState extends State<CameraScreen> {
           }
 
           try {
-            final String path = join(
-                (await getApplicationSupportDirectory()).path,
-                '${generateId()}.png');
+            final String id = generateId();
+            final String path =
+                join((await getApplicationSupportDirectory()).path, '$id.jpg');
 
             await _controller.takePicture(path);
 
-            setState(() {
-              if (currentSelection == Selection.person) {
-                path1 = path;
-                currentSelection = Selection.temperature;
-              } else if (currentSelection == Selection.temperature) {
-                path2 = path;
-                currentSelection = Selection.done;
-              }
-            });
+            if (currentSelection == Selection.person) {
+              path1 = path;
+              final File compressedFile = await compressImageFile(
+                File(path1),
+                path1.replaceAll(
+                  id,
+                  generateId(),
+                ),
+              );
+              logEntry = await processCropFaceImage(compressedFile);
+              currentSelection = Selection.temperature;
+            } else if (currentSelection == Selection.temperature) {
+              path2 = path;
+              final File compressedFile = await compressImageFile(
+                File(path2),
+                path2.replaceAll(
+                  id,
+                  generateId(),
+                ),
+              );
+              temperature = await processThermometerImage(compressedFile);
+              currentSelection = Selection.done;
+            }
+
+            setState(() {});
           } catch (e) {
             _scaffoldKey.currentState.removeCurrentSnackBar();
             _scaffoldKey.currentState.showSnackBar(
@@ -169,6 +188,87 @@ class _FileDisplay extends StatelessWidget {
             Text(
               fileLabel,
               style: Theme.of(context).textTheme.caption,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ImageDisplay extends StatelessWidget {
+  const _ImageDisplay(this.logEntry, this.fileLabel, this.isSelected);
+
+  final LogEntry logEntry;
+  final String fileLabel;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 50,
+      height: 65,
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: isSelected ? Border.all(width: 2) : const Border(),
+      ),
+      child: Material(
+        elevation: 4.0,
+        child: Column(
+          children: <Widget>[
+            if (logEntry.people.isNotEmpty)
+              AspectRatio(
+                aspectRatio: 1,
+                child: logEntry.people[0].photo,
+              ),
+            Text(
+              fileLabel,
+              style: Theme.of(context).textTheme.caption.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TemperatureImageDisplay extends StatelessWidget {
+  const _TemperatureImageDisplay(
+      this.temperature, this.fileLabel, this.isSelected);
+
+  final Temperature temperature;
+  final String fileLabel;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 50,
+      height: 65,
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: isSelected ? Border.all(width: 2) : const Border(),
+      ),
+      child: Material(
+        elevation: 4.0,
+        child: Column(
+          children: <Widget>[
+            if (temperature.photo != null)
+              AspectRatio(
+                aspectRatio: 1,
+                child: temperature.photo,
+              ),
+            Text(
+              fileLabel,
+              style: Theme.of(context).textTheme.caption.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
               maxLines: 1,
               overflow: TextOverflow.fade,
             ),

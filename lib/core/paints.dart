@@ -22,7 +22,7 @@ class BoundingBoxPainter extends CustomPainter {
         rectangle,
         Paint()
           ..color = Colors.yellow
-          ..strokeWidth = 6.0
+          ..strokeWidth = 2.0
           ..style = PaintingStyle.stroke,
       );
     }
