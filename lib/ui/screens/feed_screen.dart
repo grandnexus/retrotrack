@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrotrack/core/index.dart';
+import 'package:retrotrack/ui/index.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen();
@@ -8,12 +9,44 @@ class FeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Feed Screen'),
-        actions: const <Widget>[_LogoutButton()],
+      body: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(color: Theme.of(context).primaryColor),
+              top: BorderSide(color: Theme.of(context).primaryColor),
+              right: BorderSide(color: Theme.of(context).primaryColor),
+              bottom: BorderSide(color: Theme.of(context).primaryColor),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Logo(),
+              const Divider(),
+              Expanded(
+                child: ScrollConfiguration(
+                  behavior: const NoneScrollBehavior(),
+                  child: ListView.separated(
+                    itemCount: 25,
+                    separatorBuilder: (_, __) => const Divider(
+                      indent: 16,
+                      endIndent: 16,
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Text('item $index'),
+                      );
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
       floatingActionButton: const _FAB(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
@@ -42,7 +75,7 @@ class _FAB extends StatelessWidget {
       onPressed: () {
         Navigator.pushNamed(context, '/camera');
       },
-      label: const Text('Entry'),
+      label: const Text('ENTRY'),
       icon: const Icon(Icons.add),
     );
   }

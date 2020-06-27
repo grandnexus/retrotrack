@@ -16,15 +16,27 @@ class AuthScreen extends StatelessWidget {
       }
 
       return Scaffold(
-        appBar: AppBar(title: const Text('Auth Screen')),
-        body: Center(
-          child: RaisedButton.icon(
-            onPressed: () {
-              sessionProvider.read(context).state =
-                  const SessionProvider(isAuth: true);
-            },
-            icon: const Icon(Icons.person),
-            label: const Text('Login'),
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Logo(),
+              const SizedBox(height: 16),
+
+              //
+              OutlineButton(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColorLight,
+                ),
+                onPressed: () {
+                  sessionProvider.read(context).state =
+                      const SessionProvider(isAuth: true);
+                },
+                child: const Text('LOGIN'),
+              ),
+            ],
           ),
         ),
       );

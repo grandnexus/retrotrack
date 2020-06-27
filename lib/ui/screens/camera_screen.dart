@@ -42,11 +42,11 @@ class CameraScreenState extends State<CameraScreen> {
   String _getFABText() {
     switch (currentSelection) {
       case Selection.person:
-        return 'Person';
+        return 'TAKE PERSON';
       case Selection.temperature:
-        return 'Temperature';
+        return 'TAKE TEMPERATURE';
       default:
-        return 'Save';
+        return 'SAVE';
     }
   }
 
@@ -76,7 +76,7 @@ class CameraScreenState extends State<CameraScreen> {
                       }),
                       child: _FileDisplay(
                         path1,
-                        'Person',
+                        'PERSON',
                         currentSelection == Selection.person,
                       ),
                     ),
@@ -87,7 +87,7 @@ class CameraScreenState extends State<CameraScreen> {
                       }),
                       child: _FileDisplay(
                         path2,
-                        'Temp.',
+                        'TEMP.',
                         currentSelection == Selection.temperature,
                       ),
                     ),
@@ -98,9 +98,9 @@ class CameraScreenState extends State<CameraScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        icon: currentSelection != Selection.done
-            ? const Icon(Icons.camera_alt)
-            : const Icon(Icons.save),
+        // icon: currentSelection != Selection.done
+        //     ? const Icon(Icons.camera_alt)
+        //     : const Icon(Icons.save),
         label: Text(_getFABText()),
         onPressed: () async {
           if (currentSelection == Selection.done) {
@@ -150,7 +150,9 @@ class _FileDisplay extends StatelessWidget {
       height: screenSize.height * 0.2,
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        border: isSelected ? Border.all(width: 2) : const Border(),
+        border: isSelected
+            ? Border.all(width: 2, color: Theme.of(context).primaryColor)
+            : const Border(),
       ),
       child: Material(
         elevation: 4.0,

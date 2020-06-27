@@ -218,6 +218,8 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.7):
     - BoringSSL-GRPC/Interface (= 0.0.7)
   - BoringSSL-GRPC/Interface (0.0.7)
+  - camera (0.0.1):
+    - Flutter
   - Firebase/Analytics (6.27.0):
     - Firebase/Core
   - Firebase/Core (6.27.0):
@@ -420,6 +422,7 @@ PODS:
   - Protobuf (3.12.0)
 
 DEPENDENCIES:
+  - camera (from `.symlinks/plugins/camera/ios`)
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Firestore
@@ -471,6 +474,8 @@ SPEC REPOS:
     - Protobuf
 
 EXTERNAL SOURCES:
+  camera:
+    :path: ".symlinks/plugins/camera/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_core_web:
@@ -493,6 +498,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
+  camera: 38cc83ae9a5667bb5a71c7d9edaf60a91920fd4e
   Firebase: fc4cbf6f1592636431821ef9a3c557e4dfd9f268
   firebase_core: 335c02abd48672b7c83c683df833d0488a72e73e
   firebase_core_web: d501d8b946b60c8af265428ce483b0fff5ad52d1
@@ -532,4 +538,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 55562a23cc5df3b24c15894c73e1644e5ed70b93
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.9.1
