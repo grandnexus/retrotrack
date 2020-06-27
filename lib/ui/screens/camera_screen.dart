@@ -1,278 +1,116 @@
-import 'dart:io';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:retrotrack/core/index.dart';
-import 'package:retrotrack/core/models.dart';
+import 'package:camera/camera.dart';
+import 'package:provider/provider.dart';
+import 'package:retrotrack/core/models/person.dart';
+
+import 'package:retrotrack/core/providers/camera_provider.dart';
 import 'package:retrotrack/ui/index.dart';
+import 'package:retrotrack/ui/widgets/image_card.dart';
 
-enum Selection { person, temperature, done }
-
-class CameraScreen extends StatefulWidget {
-  const CameraScreen(this.camera);
-
-  final CameraDescription camera;
-
-  @override
-  CameraScreenState createState() => CameraScreenState();
-}
-
-class CameraScreenState extends State<CameraScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
-  String path1;
-  String path2;
-  Selection currentSelection;
-  LogEntry logEntry;
-  Temperature temperature;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = CameraController(widget.camera, ResolutionPreset.medium);
-    _initializeControllerFuture = _controller.initialize();
-    currentSelection = Selection.person;
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  String _getFABText() {
-    switch (currentSelection) {
-      case Selection.person:
-        return 'PERSON';
-      case Selection.temperature:
-        return 'TEMPERATURE';
-      default:
-        return 'SAVE';
-    }
-  }
+class CameraScreen extends StatelessWidget {
+  const CameraScreen();
 
   @override
   Widget build(BuildContext context) {
+    final CameraProvider cameraProvider =
+        Provider.of<CameraProvider>(context, listen: false);
     return Scaffold(
-      key: _scaffoldKey,
+      key: cameraProvider.scaffoldKey,
       body: RetroBody(
-        child: FutureBuilder<void>(
-          future: _initializeControllerFuture,
-          builder: (_, AsyncSnapshot<void> snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            FutureBuilder<void>(
+                future: cameraProvider.controller.initialize(),
+                builder: (_, AsyncSnapshot<void> snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-            return Stack(
-              alignment: Alignment.bottomCenter,
-              children: <Widget>[
-                CameraPreview(_controller),
+                  return CameraPreview(cameraProvider.controller);
+                }),
+            // Preview
 
-                // Preview
-                Row(
-                  children: <Widget>[
-                    if (logEntry != null)
-                      GestureDetector(
-                        onTap: () => setState(() {
-                          currentSelection = Selection.person;
-                        }),
-                        child: _ImageDisplay(
-                          logEntry,
-                          'Person',
-                          currentSelection == Selection.person,
-                        ),
-                      ),
-                    if (temperature != null)
-                      GestureDetector(
-                        onTap: () => setState(() {
-                          currentSelection = Selection.temperature;
-                        }),
-                        child: _TemperatureImageDisplay(
-                          temperature,
-                          temperature.temperature.toString(),
-                          currentSelection == Selection.temperature,
-                        ),
-                      ),
-                  ],
-                ),
-              ],
-            );
-          },
+            Positioned(
+              left: 0,
+              bottom: 0,
+              child: Consumer<CameraProvider>(
+                builder: (_, CameraProvider cameraProvider, __) {
+                  return Column(
+                    children: <Widget>[
+                      PeopleSection(cameraProvider),
+                      TemperatureSection(cameraProvider),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: currentSelection != Selection.done
-            ? const Icon(Icons.camera_alt)
-            : const Icon(Icons.save),
-        label: Text(_getFABText()),
-        onPressed: () async {
-          if (currentSelection == Selection.done) {
-            Navigator.pop(context);
-          }
-
-          try {
-            final String id = generateId();
-            final String path =
-                join((await getApplicationSupportDirectory()).path, '$id.jpg');
-
-            await _controller.takePicture(path);
-
-            if (currentSelection == Selection.person) {
-              path1 = path;
-              final File compressedFile = await compressImageFile(
-                File(path1),
-                path1.replaceAll(
-                  id,
-                  generateId(),
-                ),
-              );
-              logEntry = await processCropFaceImage(compressedFile);
-              currentSelection = Selection.temperature;
-            } else if (currentSelection == Selection.temperature) {
-              path2 = path;
-              final File compressedFile = await compressImageFile(
-                File(path2),
-                path2.replaceAll(
-                  id,
-                  generateId(),
-                ),
-              );
-              temperature = await processThermometerImage(compressedFile);
-              currentSelection = Selection.done;
-            }
-
-            setState(() {});
-          } catch (e) {
-            _scaffoldKey.currentState.removeCurrentSnackBar();
-            _scaffoldKey.currentState.showSnackBar(
-              SnackBar(content: Text(e.toString())),
-            );
-          }
+      floatingActionButton: Consumer<CameraProvider>(
+        builder: (_, CameraProvider cameraProvider, __) {
+          return FloatingActionButton.extended(
+            icon: cameraProvider.currentSelection != Selection.done
+                ? const Icon(Icons.camera_alt)
+                : const Icon(Icons.save),
+            label: Text(
+              cameraProvider.getFABText(cameraProvider.currentSelection),
+            ),
+            onPressed: () => cameraProvider.takePhoto(context),
+          );
         },
       ),
     );
   }
 }
 
-class _FileDisplay extends StatelessWidget {
-  const _FileDisplay(this.filePath, this.fileLabel, this.isSelected);
+class PeopleSection extends StatelessWidget {
+  const PeopleSection(this.camera);
 
-  final String filePath;
-  final String fileLabel;
-  final bool isSelected;
+  final CameraProvider camera;
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
+    if (camera.logEntry == null) {
+      return const SizedBox.shrink();
+    }
 
-    return Container(
-      height: screenSize.height * 0.2,
-      margin: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        border: isSelected
-            ? Border.all(width: 2, color: Theme.of(context).primaryColor)
-            : const Border(),
-      ),
-      child: Material(
-        elevation: 4.0,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: <Widget>[
-            AspectRatio(
-              aspectRatio: screenSize.width / screenSize.height,
-              child: Image.file(File(filePath), fit: BoxFit.fill),
-            ),
-            Text(
-              fileLabel,
-              style: Theme.of(context).textTheme.caption,
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-            ),
-          ],
+    final List<Person> _people = camera.logEntry.people;
+
+    return Row(
+      children: List<ImageCard>.generate(
+        _people.length,
+        (int index) => ImageCard(
+          _people[index].photo,
+          camera.getFABText(Selection.person),
+          camera.currentSelection == Selection.person,
         ),
       ),
     );
   }
 }
 
-class _ImageDisplay extends StatelessWidget {
-  const _ImageDisplay(this.logEntry, this.fileLabel, this.isSelected);
+class TemperatureSection extends StatelessWidget {
+  const TemperatureSection(this.camera);
 
-  final LogEntry logEntry;
-  final String fileLabel;
-  final bool isSelected;
+  final CameraProvider camera;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 50,
-      height: 65,
-      margin: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        border: isSelected ? Border.all(width: 2) : const Border(),
-      ),
-      child: Material(
-        elevation: 4.0,
-        child: Column(
-          children: <Widget>[
-            if (logEntry.people.isNotEmpty)
-              AspectRatio(
-                aspectRatio: 1,
-                child: logEntry.people[0].photo,
-              ),
-            Text(
-              fileLabel,
-              style: Theme.of(context).textTheme.caption.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+    if (camera.logEntry == null) {
+      return const SizedBox.shrink();
+    }
 
-class _TemperatureImageDisplay extends StatelessWidget {
-  const _TemperatureImageDisplay(
-      this.temperature, this.fileLabel, this.isSelected);
+    final List<Person> _people = camera.logEntry.people;
 
-  final Temperature temperature;
-  final String fileLabel;
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 50,
-      height: 65,
-      margin: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        border: isSelected ? Border.all(width: 2) : const Border(),
-      ),
-      child: Material(
-        elevation: 4.0,
-        child: Column(
-          children: <Widget>[
-            if (temperature.photo != null)
-              AspectRatio(
-                aspectRatio: 1,
-                child: temperature.photo,
-              ),
-            Text(
-              fileLabel,
-              style: Theme.of(context).textTheme.caption.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-            ),
-          ],
+    return Row(
+      children: List<ImageCard>.generate(
+        _people.length,
+        (int index) => ImageCard(
+          _people[index].temperature.photo,
+          camera.getFABText(Selection.temperature),
+          camera.currentSelection == Selection.temperature,
         ),
       ),
     );

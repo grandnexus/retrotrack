@@ -1,11 +1,26 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:retrotrack/core/models/index.dart';
+import 'package:retrotrack/core/providers/camera_provider.dart';
+
 import 'package:retrotrack/ui/index.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(TemperatureAdapter());
+  Hive.registerAdapter(PersonAdapter());
+  Hive.registerAdapter(LogEntryAdapter());
+
+  final Box<LogEntry> logEntryLog = await Hive.openBox('log_entry');
+
+  print(logEntryLog);
 
   final List<CameraDescription> cameras = await availableCameras();
 
@@ -59,7 +74,10 @@ Future<void> main() async {
         routes: <String, Widget Function(BuildContext)>{
           '/': (_) => const AuthGuard(FeedScreen()),
           '/auth': (_) => const AuthScreen(),
-          '/camera': (_) => CameraScreen(cameras.first),
+          '/camera': (_) => ChangeNotifierProvider<CameraProvider>(
+                create: (_) => CameraProvider(cameras.first),
+                child: CameraScreen(),
+              ),
         },
       ),
     ),
