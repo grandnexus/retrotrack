@@ -1,22 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
 
 final StateProvider<SessionProvider> sessionProvider =
-    StateProvider<SessionProvider>(
-  (ProviderReference ref) => const SessionProvider(),
-);
+    StateProvider<SessionProvider>((_) => SessionProvider());
 
 class SessionProvider {
-  const SessionProvider({this.isAuth = false});
+  SessionProvider();
 
-  final bool isAuth;
+  bool _isAuth = false;
 
-  // bool get isAuth => _isAuth;
+  bool get isAuth => _isAuth;
 
-  // void login() {
-  //   _isAuth = true;
-  // }
+  void login(BuildContext context, String routeName) {
+    _isAuth = true;
+    Navigator.pushReplacementNamed(context, routeName);
+  }
 
-  // void logout() {
-  //   _isAuth = false;
-  // }
+  void logout() {
+    _isAuth = false;
+  }
 }

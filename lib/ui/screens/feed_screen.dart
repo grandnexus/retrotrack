@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:retrotrack/core/index.dart';
 import 'package:retrotrack/ui/index.dart';
 import 'package:snappable/snappable.dart';
 
-class FeedScreen extends StatelessWidget {
+class FeedScreen extends HookWidget {
   const FeedScreen();
 
   @override
@@ -20,10 +22,10 @@ class FeedScreen extends StatelessWidget {
               child: ScrollConfiguration(
                 behavior: const NoneScrollBehavior(),
                 child: Consumer((_, Reader read) {
-                  final List<int> list = read(listProvider).state;
+                  final FeedProvider feed = read(feedProvider).state;
 
                   return ListView.separated(
-                    itemCount: list.length,
+                    itemCount: feed.generateList().length,
                     separatorBuilder: (_, __) => const Divider(
                       indent: 16,
                       endIndent: 16,
@@ -43,7 +45,7 @@ class FeedScreen extends StatelessWidget {
                             );
                             if (res) {
                               key.currentState.snap().then((_) {
-                                listProvider.read(context).state.remove(index);
+                                feed.removeFromList(index);
                               });
                             }
                           },
@@ -104,16 +106,17 @@ class _DeleteDialog extends StatelessWidget {
   }
 }
 
-class _LogoutButton extends StatelessWidget {
+class _LogoutButton extends HookWidget {
   const _LogoutButton();
 
   @override
   Widget build(BuildContext context) {
+    final SessionProvider session = useProvider(sessionProvider).state;
+
     return IconButton(
       icon: const Icon(Icons.exit_to_app),
       onPressed: () {
-        sessionProvider.read(context).state =
-            const SessionProvider(isAuth: false);
+        session.logout();
       },
     );
   }

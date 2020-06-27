@@ -7,7 +7,8 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart' as dart_image;
-import 'package:retrotrack/core/models.dart';
+import 'package:retrotrack/core/models/index.dart';
+
 import 'package:retrotrack/core/paints.dart';
 
 String generateId() {
@@ -77,7 +78,7 @@ Future<LogEntry> processCropFaceImage(File imageFile) async {
     final Image croppedImage = Image.memory(jpgInt as Uint8List);
 
     images.add(croppedImage);
-    people.add(Person(1, now, croppedImage));
+    people.add(Person(1, now, croppedImage, temperature: Temperature()));
   }
 
   final LogEntry logEntry = LogEntry(
@@ -139,16 +140,16 @@ Future<Temperature> processThermometerImage(File imageFile) async {
 
   if (isTemperatureFound) {
     temperature = Temperature(
-      croppedImage,
-      CustomPaint(
+      photo: croppedImage,
+      originalPhoto: CustomPaint(
         painter: BoundingBoxPainter(
           rect: <Rect>[boundingBox],
           imageFile: image,
         ),
       ),
-      temperatureString,
-      temperatureValue,
-      boundingBox,
+      translatedText: temperatureString,
+      temperature: temperatureValue,
+      boundingBox: boundingBox,
     );
   }
 
