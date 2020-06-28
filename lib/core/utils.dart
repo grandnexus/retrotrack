@@ -66,13 +66,13 @@ Future<ui.Image> convertCustomPaintToImage(
 Future<String> saveImageToPath(ui.Image image) async {
   final ByteData pngBytes =
       await image.toByteData(format: ui.ImageByteFormat.png);
-
+  final String imageName = generateId();
   final Directory directory = await getExternalStorageDirectory();
   final String path = directory.path;
-  final String imagePath = '$path/images/${generateId()}.png';
+  final String imagePath = '$path/images/$imageName.png';
 
   await Directory('$path/images').create(recursive: true);
-  File('$path/images/${generateId()}.png')
+  File('$path/images/$imageName.png')
       .writeAsBytesSync(pngBytes.buffer.asInt8List());
 
   return imagePath;
@@ -119,7 +119,7 @@ Future<LogEntry> processCropFaceImage(File imageFile) async {
         1,
         now,
         imagePath,
-        temperature: Temperature(),
+        temperature: Temperature(temperature: 0.0),
         photo: croppedImage,
       ),
     );
@@ -154,7 +154,7 @@ Future<Temperature> processThermometerImage(File imageFile) async {
   Image croppedImage;
   String croppedImagePath;
   String temperatureString;
-  double temperatureValue;
+  double temperatureValue = 0.0;
   bool isTemperatureFound = false;
   Temperature temperature;
 
