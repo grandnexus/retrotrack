@@ -36,7 +36,7 @@ class CameraProvider extends ChangeNotifier {
   GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
 
   void init(CameraDescription cameraDescription) {
-    _controller = CameraController(cameraDescription, ResolutionPreset.medium);
+    _controller = CameraController(cameraDescription, ResolutionPreset.high);
     _currentSelection = Selection.person;
     notifyListeners();
   }

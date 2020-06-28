@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:retrotrack/core/index.dart';
 import 'package:retrotrack/ui/index.dart';
 
-class AuthGuard extends HookWidget {
+class AuthGuard extends StatelessWidget {
   const AuthGuard(this.child);
 
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final SessionProvider session = useProvider(sessionProvider).state;
+    return Consumer<SessionProvider>(
+      builder: (_, SessionProvider session, __) {
+        if (session.isAuth) {
+          return child;
+        }
 
-    if (session.isAuth) {
-      return child;
-    }
-
-    return const Redirect('/auth');
+        return const Redirect('/auth');
+      },
+    );
   }
 }

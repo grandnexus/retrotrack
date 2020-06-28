@@ -1,22 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:flutter/material.dart' show ChangeNotifier;
 
-final StateProvider<SessionProvider> sessionProvider =
-    StateProvider<SessionProvider>((_) => SessionProvider());
-
-class SessionProvider {
+class SessionProvider extends ChangeNotifier {
   SessionProvider();
 
   bool _isAuth = false;
 
   bool get isAuth => _isAuth;
 
-  void login(BuildContext context, String routeName) {
+  void login() {
     _isAuth = true;
-    Navigator.pushReplacementNamed(context, routeName);
+    notifyListeners();
   }
 
   void logout() {
     _isAuth = false;
+    notifyListeners();
   }
 }

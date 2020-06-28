@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
-class ImageCard extends HookWidget {
+class ImageCard extends StatelessWidget {
   const ImageCard(this.image, this.fileLabel, this.isSelected);
 
   final Image image;
