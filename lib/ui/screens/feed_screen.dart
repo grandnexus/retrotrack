@@ -118,7 +118,10 @@ class _LogDisplay extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: log.people.map((Person p) {
-                          final bool danger = p.temperature.temperature >= 37.5;
+                          bool danger = false;
+                          if (p.temperature != null &&
+                              p.temperature.temperature != null)
+                            danger = p.temperature.temperature >= 37.5;
 
                           return Row(
                             children: <Widget>[

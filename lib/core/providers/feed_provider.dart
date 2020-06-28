@@ -13,8 +13,15 @@ class FeedProvider extends ChangeNotifier {
   List<LogEntry> get list => _list;
   bool get isLoading => _isLoading;
 
+  Future<void> removeLogEntry(LogEntry logEntry) async {
+    final Box<LogEntry> logEntryBox = await Hive.openBox('log_entries');
+
+    logEntryBox.delete(logEntry.key);
+  }
+
   void removeFromList(LogEntry log) {
     _list.remove(log);
+    removeLogEntry(log);
     notifyListeners();
   }
 
