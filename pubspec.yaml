@@ -42,3 +42,4 @@ flutter:
   assets:
     - assets/Danger.flr
     - assets/RetroLoading.flr
+    - assets/logo.png

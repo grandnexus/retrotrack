@@ -21,8 +21,8 @@ class AuthScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const Logo(),
-                const SizedBox(height: 16),
+                const Logo(showImage: true),
+                const SizedBox(height: 16.0),
 
                 //
                 RetroOutlineButton(
