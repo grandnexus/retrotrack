@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show CustomPaint, Image, Rect;
+
 import 'package:hive/hive.dart';
 
 part 'temperature.g.dart';

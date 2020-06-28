@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
+import 'package:snappable/snappable.dart';
+
 import 'package:retrotrack/core/index.dart';
 import 'package:retrotrack/ui/index.dart';
-import 'package:snappable/snappable.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen();

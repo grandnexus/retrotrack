@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart' show ChangeNotifier;
-import 'package:hive/hive.dart';
-import 'package:retrotrack/core/index.dart';
+
+import 'package:hive/hive.dart' show Box, Hive;
+
+import 'package:retrotrack/core/index.dart' show LogEntry;
 
 class FeedProvider extends ChangeNotifier {
   FeedProvider() {

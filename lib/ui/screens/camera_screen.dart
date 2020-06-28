@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
+
 import 'package:retrotrack/core/index.dart';
-import 'package:retrotrack/core/models/person.dart';
 import 'package:retrotrack/ui/index.dart';
-import 'package:retrotrack/ui/widgets/flare_loading.dart';
-import 'package:retrotrack/ui/widgets/image_card.dart';
-import 'package:retrotrack/ui/widgets/retro_back_button.dart';
 
 class CameraScreen extends StatelessWidget {
   const CameraScreen();

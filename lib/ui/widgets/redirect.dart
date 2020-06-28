@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Redirect extends StatefulWidget {
-  const Redirect(this.routeName, {this.removeUntilRoot = false});
+  const Redirect(
+    this.routeName, {
+    this.removeUntilRoot = false,
+  });
 
   final String routeName;
   final bool removeUntilRoot;

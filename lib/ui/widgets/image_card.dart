@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ImageCard extends StatelessWidget {
-  const ImageCard(this.image, this.fileLabel, this.isSelected, this.onPressed);
+  const ImageCard(
+    this.image,
+    this.fileLabel,
+    this.isSelected,
+    this.onPressed,
+  );
 
   final Image image;
   final String fileLabel;

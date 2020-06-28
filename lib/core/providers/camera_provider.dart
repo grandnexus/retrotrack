@@ -1,13 +1,13 @@
-import 'dart:io';
+import 'dart:io' show File;
+
+import 'package:flutter/material.dart';
 
 import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:retrotrack/core/index.dart';
 
-import 'package:retrotrack/core/models/index.dart' show LogEntry, Temperature;
+import 'package:retrotrack/core/index.dart';
 
 enum Selection { person, temperature, done }
 

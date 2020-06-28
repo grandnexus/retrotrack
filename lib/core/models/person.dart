@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show Image;
+
 import 'package:hive/hive.dart';
 
 import 'package:retrotrack/core/models/index.dart' show Temperature;
