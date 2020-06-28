@@ -51,7 +51,7 @@
 						0.11764705926179886,
 						1
 					],
-					"width": 24,
+					"width": 50,
 					"cap": 0,
 					"join": 0,
 					"trim": 0,
@@ -174,7 +174,7 @@
 					"opacity": 1,
 					"isCollapsed": false,
 					"clips": [],
-					"width": 24,
+					"width": 50,
 					"height": 200,
 					"cornerRadius": 32,
 					"type": "rectangle"
@@ -240,8 +240,8 @@
 					"opacity": 1,
 					"isCollapsed": false,
 					"clips": [],
-					"width": 32,
-					"height": 32,
+					"width": 50,
+					"height": 50,
 					"type": "ellipse"
 				}
 			],
@@ -383,11 +383,6 @@
 										"time": 1.1666666666666667,
 										"interpolatorType": 1,
 										"value": 0.75
-									},
-									{
-										"time": 1.25,
-										"interpolatorType": 1,
-										"value": 1
 									}
 								]
 							],
@@ -478,11 +473,6 @@
 										"time": 1.1666666666666667,
 										"interpolatorType": 1,
 										"value": 0.75
-									},
-									{
-										"time": 1.25,
-										"interpolatorType": 1,
-										"value": 1
 									}
 								]
 							],

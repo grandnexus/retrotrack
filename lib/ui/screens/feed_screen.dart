@@ -131,7 +131,12 @@ class _LogDisplay extends StatelessWidget {
                                 p.temperature.temperature.toString(),
                                 style: !danger
                                     ? Theme.of(context).textTheme.bodyText1
-                                    : Theme.of(context).textTheme.subtitle1,
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        .copyWith(
+                                          color: const Color(0xFFD2001E),
+                                        ),
                               ),
                               if (danger)
                                 const Padding(
