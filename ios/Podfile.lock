@@ -327,6 +327,10 @@ PODS:
     - FirebaseCore (~> 6.8)
     - GTMSessionFetcher/Core (~> 1.1)
   - Flutter (1.0.0)
+  - flutter_image_compress (0.0.1):
+    - Flutter
+    - Mantle
+    - SDWebImageWebPCoder
   - flutter_plugin_android_lifecycle (0.0.1):
     - Flutter
   - GoogleAPIClientForREST/Core (1.4.1):
@@ -407,6 +411,18 @@ PODS:
   - image_picker (0.0.1):
     - Flutter
   - leveldb-library (1.22)
+  - libwebp (1.1.0):
+    - libwebp/demux (= 1.1.0)
+    - libwebp/mux (= 1.1.0)
+    - libwebp/webp (= 1.1.0)
+  - libwebp/demux (1.1.0):
+    - libwebp/webp
+  - libwebp/mux (1.1.0):
+    - libwebp/demux
+  - libwebp/webp (1.1.0)
+  - Mantle (2.1.1):
+    - Mantle/extobjc (= 2.1.1)
+  - Mantle/extobjc (2.1.1)
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
     - nanopb/encode (= 1.30905.0)
@@ -420,6 +436,10 @@ PODS:
     - Flutter
   - PromisesObjC (1.2.9)
   - Protobuf (3.12.0)
+  - SDWebImage/Core (5.8.1)
+  - SDWebImageWebPCoder (0.6.1):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.7)
 
 DEPENDENCIES:
   - camera (from `.symlinks/plugins/camera/ios`)
@@ -435,6 +455,7 @@ DEPENDENCIES:
   - firebase_core_web (from `.symlinks/plugins/firebase_core_web/ios`)
   - firebase_ml_vision (from `.symlinks/plugins/firebase_ml_vision/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -469,9 +490,13 @@ SPEC REPOS:
     - gRPC-Core
     - GTMSessionFetcher
     - leveldb-library
+    - libwebp
+    - Mantle
     - nanopb
     - PromisesObjC
     - Protobuf
+    - SDWebImage
+    - SDWebImageWebPCoder
 
 EXTERNAL SOURCES:
   camera:
@@ -484,6 +509,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_ml_vision/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  flutter_image_compress:
+    :path: ".symlinks/plugins/flutter_image_compress/ios"
   flutter_plugin_android_lifecycle:
     :path: ".symlinks/plugins/flutter_plugin_android_lifecycle/ios"
   image_picker:
@@ -517,6 +544,7 @@ SPEC CHECKSUMS:
   FirebaseMLVisionTextModel: 2ec9bf2287b29ef2b7d79152aad454cce5bc3040
   FirebaseStorage: af7bdbd12177cf567df00904e3e3a93704f25b15
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_image_compress: 082f8daaf6c1b0c9fe798251c750ef0ecd98d7ae
   flutter_plugin_android_lifecycle: dc0b544e129eebb77a6bfb1239d4d1c673a60a35
   GoogleAPIClientForREST: e50dc3267b3131ee3a25e707c10204f6bec15ae9
   GoogleAppMeasurement: 2fd5c5a56c069db635c8e7b92d4809a9591d0a69
@@ -529,13 +557,17 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
   image_picker: 66aa71bc96850a90590a35d4c4a2907b0d823109
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
+  libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  Mantle: 35238ae6f2e2b2d474fa7b67fee82a59fea71915
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   path_provider_linux: 4d630dc393e1f20364f3e3b4a2ff41d9674a84e4
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
   PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
   Protobuf: 2793fcd0622a00b546c60e7cbbcc493e043e9bb9
+  SDWebImage: e3eae2eda88578db0685a0c88597fdadd9433f05
+  SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
 
 PODFILE CHECKSUM: 55562a23cc5df3b24c15894c73e1644e5ed70b93
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.9.3
