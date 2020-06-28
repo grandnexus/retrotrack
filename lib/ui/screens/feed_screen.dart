@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:retrotrack/core/index.dart';
 import 'package:retrotrack/ui/index.dart';
 import 'package:snappable/snappable.dart';
 
-class FeedScreen extends HookWidget {
+class FeedScreen extends StatelessWidget {
   const FeedScreen();
 
   @override
   Widget build(BuildContext context) {
+    const Duration snapDuration = Duration(seconds: 4);
+
     return Scaffold(
       body: RetroBody(
         child: Column(
@@ -21,41 +21,43 @@ class FeedScreen extends HookWidget {
             Expanded(
               child: ScrollConfiguration(
                 behavior: const NoneScrollBehavior(),
-                child: Consumer((_, Reader read) {
-                  final FeedProvider feed = read(feedProvider).state;
+                child: Consumer<FeedProvider>(
+                  builder: (_, FeedProvider feed, __) {
+                    return ListView.separated(
+                      itemCount: feed.list.length,
+                      separatorBuilder: (_, __) => const Divider(
+                        indent: 16,
+                        endIndent: 16,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        final GlobalKey<SnappableState> key =
+                            GlobalKey<SnappableState>();
 
-                  return ListView.separated(
-                    itemCount: feed.generateList().length,
-                    separatorBuilder: (_, __) => const Divider(
-                      indent: 16,
-                      endIndent: 16,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      final GlobalKey<SnappableState> key =
-                          GlobalKey<SnappableState>();
-
-                      return Snappable(
-                        key: key,
-                        child: ListTile(
-                          onLongPress: () async {
-                            final bool res = await showDialog<bool>(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (_) => _DeleteDialog(),
-                            );
-                            if (res) {
-                              key.currentState.snap().then((_) {
-                                feed.removeFromList(index);
-                              });
-                            }
-                          },
-                          title: Text('Person $index'.toUpperCase()),
-                          trailing: const Text('37.0\u2103'),
-                        ),
-                      );
-                    },
-                  );
-                }),
+                        return Snappable(
+                          key: key,
+                          duration: snapDuration,
+                          child: ListTile(
+                            onLongPress: () async {
+                              final bool res = await showDialog<bool>(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (_) => _DeleteDialog(),
+                              );
+                              if (res) {
+                                key.currentState.snap().then((_) async {
+                                  await Future<void>.delayed(snapDuration);
+                                  feed.removeFromList(index);
+                                });
+                              }
+                            },
+                            title: Text('Person $index'.toUpperCase()),
+                            trailing: const Text('37.0\u2103'),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             )
           ],
@@ -102,23 +104,6 @@ class _DeleteDialog extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-// ignore: unused_element
-class _LogoutButton extends HookWidget {
-  const _LogoutButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final SessionProvider session = useProvider(sessionProvider).state;
-
-    return IconButton(
-      icon: const Icon(Icons.exit_to_app),
-      onPressed: () {
-        session.logout();
-      },
     );
   }
 }

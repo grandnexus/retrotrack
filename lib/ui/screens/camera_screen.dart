@@ -14,6 +14,7 @@ class CameraScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final CameraProvider cameraProvider =
         Provider.of<CameraProvider>(context, listen: false);
+
     return Scaffold(
       key: cameraProvider.scaffoldKey,
       body: RetroBody(
@@ -27,7 +28,10 @@ class CameraScreen extends StatelessWidget {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  return CameraPreview(cameraProvider.controller);
+                  return AspectRatio(
+                    aspectRatio: cameraProvider.controller.value.aspectRatio,
+                    child: CameraPreview(cameraProvider.controller),
+                  );
                 }),
             // Preview
 

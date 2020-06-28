@@ -1,21 +1,14 @@
-import 'package:riverpod/riverpod.dart';
+import 'package:flutter/material.dart' show ChangeNotifier;
 
-final StateProvider<FeedProvider> feedProvider =
-    StateProvider<FeedProvider>((ProviderReference ref) => FeedProvider());
-
-class FeedProvider {
+class FeedProvider extends ChangeNotifier {
   FeedProvider();
 
-  List<int> _list = <int>[];
+  final List<int> _list = List<int>.generate(16, (int index) => index);
 
   List<int> get list => _list;
 
-  List<int> generateList() {
-    _list = List<int>.generate(16, (int index) => index);
-    return _list;
-  }
-
   void removeFromList(int index) {
     _list.removeAt(index);
+    notifyListeners();
   }
 }
