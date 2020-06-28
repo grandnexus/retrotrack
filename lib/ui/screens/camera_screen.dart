@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
+import 'package:retrotrack/core/index.dart';
 import 'package:retrotrack/core/models/person.dart';
-
-import 'package:retrotrack/core/providers/camera_provider.dart';
 import 'package:retrotrack/ui/index.dart';
 import 'package:retrotrack/ui/widgets/image_card.dart';
 
@@ -65,7 +64,13 @@ class CameraScreen extends StatelessWidget {
             label: Text(
               cameraProvider.getFABText(cameraProvider.currentSelection),
             ),
-            onPressed: () => cameraProvider.takePhoto(context),
+            onPressed: () async {
+              final bool dataTaken = await cameraProvider.takePhoto();
+              if (dataTaken) {
+                Navigator.pop(context, true);
+                Provider.of<FeedProvider>(context, listen: false).refresh();
+              }
+            },
           );
         },
       ),

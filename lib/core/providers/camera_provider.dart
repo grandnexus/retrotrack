@@ -125,18 +125,20 @@ class CameraProvider extends ChangeNotifier {
     logEntryBox.add(logEntry);
   }
 
-  Future<void> takePhoto(BuildContext context) async {
+  Future<bool> takePhoto() async {
     if (currentSelection == Selection.done) {
       addLogEntry(logEntry);
-      Navigator.pop(context);
+      return true;
     }
 
     try {
       final String id = generateId();
       final String path =
-          join((await getApplicationSupportDirectory()).path, '$id.jpg');
+          join((await getExternalStorageDirectory()).path, '$id.jpg');
 
       await controller.takePicture(path);
+
+      print(path);
 
       if (currentSelection == Selection.person) {
         setPeopleImagePath(path);
@@ -177,10 +179,15 @@ class CameraProvider extends ChangeNotifier {
     } catch (e) {
       _scaffoldKey.currentState.removeCurrentSnackBar();
       _scaffoldKey.currentState.showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        SnackBar(
+          content: Text(e.toString()),
+          duration: const Duration(hours: 1),
+        ),
       );
     }
     notifyListeners();
+
+    return false;
   }
 
   String getFABText(Selection selection) {

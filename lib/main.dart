@@ -18,16 +18,23 @@ Future<void> main() async {
 
   final List<CameraDescription> cameras = await availableCameras();
 
+  const Color brightGreen = Color(0xFF87FB93);
+
   runApp(
-    ChangeNotifierProvider<SessionProvider>(
-      create: (_) => SessionProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SessionProvider>(
+          create: (_) => SessionProvider(),
+        ),
+        ChangeNotifierProvider<FeedProvider>(
+          create: (_) => FeedProvider(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Retrotrack',
         theme: ThemeData(
           brightness: Brightness.dark,
-          primarySwatch: Colors.green,
-          primaryColor: Colors.green,
-          primaryColorLight: Colors.green[300],
+          primaryColor: brightGreen,
           scaffoldBackgroundColor: Colors.black,
           splashColor: Colors.transparent,
           highlightColor: Colors.grey[900],
@@ -43,20 +50,19 @@ Future<void> main() async {
           ),
           dividerTheme: const DividerThemeData(
             thickness: 1,
-            color: Colors.green,
+            color: brightGreen,
             space: 0,
           ),
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
             shape: BeveledRectangleBorder(
-              side: BorderSide(color: Colors.green),
+              side: BorderSide(color: brightGreen),
             ),
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
             splashColor: Colors.transparent,
           ),
           dialogTheme: const DialogTheme(
-            shape:
-                BeveledRectangleBorder(side: BorderSide(color: Colors.green)),
+            shape: BeveledRectangleBorder(side: BorderSide(color: brightGreen)),
             backgroundColor: Colors.black,
           ),
 
@@ -65,12 +71,7 @@ Future<void> main() async {
         ),
         debugShowCheckedModeBanner: false,
         routes: <String, Widget Function(BuildContext)>{
-          '/': (_) => AuthGuard(
-                ChangeNotifierProvider<FeedProvider>(
-                  create: (_) => FeedProvider(),
-                  child: const FeedScreen(),
-                ),
-              ),
+          '/': (_) => const AuthGuard(FeedScreen()),
           '/auth': (_) => const AuthScreen(),
           '/camera': (_) => ChangeNotifierProvider<CameraProvider>(
                 create: (_) => CameraProvider(cameras.first),
