@@ -9,8 +9,6 @@ class FeedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Duration snapDuration = Duration(seconds: 4);
-
     return Scaffold(
       body: RetroBody(
         child: Column(
@@ -23,39 +21,28 @@ class FeedScreen extends StatelessWidget {
                 behavior: const NoneScrollBehavior(),
                 child: Consumer<FeedProvider>(
                   builder: (_, FeedProvider feed, __) {
-                    return ListView.separated(
-                      itemCount: feed.list.length,
-                      separatorBuilder: (_, __) => const Divider(
-                        indent: 16,
-                        endIndent: 16,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        final GlobalKey<SnappableState> key =
-                            GlobalKey<SnappableState>();
-
-                        return Snappable(
-                          key: key,
-                          duration: snapDuration,
-                          child: ListTile(
-                            onLongPress: () async {
-                              final bool res = await showDialog<bool>(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (_) => _DeleteDialog(),
-                              );
-                              if (res) {
-                                key.currentState.snap().then((_) async {
-                                  await Future<void>.delayed(snapDuration);
-                                  feed.removeFromList(index);
-                                });
-                              }
-                            },
-                            title: Text('Person $index'.toUpperCase()),
-                            trailing: const Text('37.0\u2103'),
+                    if (feed.isLoading) {
+                      return const Center(child: Text('LOADING...'));
+                    } else {
+                      if (feed.list.isEmpty) {
+                        return const Center(child: Text('NO ENTRY'));
+                      }
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          feed.refresh();
+                        },
+                        child: ListView.separated(
+                          itemCount: feed.list.length,
+                          separatorBuilder: (_, __) => const Divider(
+                            indent: 16,
+                            endIndent: 16,
                           ),
-                        );
-                      },
-                    );
+                          itemBuilder: (_, int index) {
+                            return _ListTile(feed.list[index]);
+                          },
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
@@ -64,6 +51,41 @@ class FeedScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: const _FAB(),
+    );
+  }
+}
+
+class _ListTile extends StatelessWidget {
+  const _ListTile(this.log);
+
+  final LogEntry log;
+
+  @override
+  Widget build(BuildContext context) {
+    const Duration snapDuration = Duration(seconds: 4);
+    final GlobalKey<SnappableState> key = GlobalKey<SnappableState>();
+    final FeedProvider feed = Provider.of<FeedProvider>(context);
+
+    return Snappable(
+      key: key,
+      duration: snapDuration,
+      child: ListTile(
+        onLongPress: () async {
+          final bool res = await showDialog<bool>(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => _DeleteDialog(),
+          );
+          if (res) {
+            key.currentState.snap().then((_) async {
+              await Future<void>.delayed(snapDuration);
+              feed.removeFromList(log);
+            });
+          }
+        },
+        title: Text(log.people.length.toString()),
+        trailing: const Text('37.0\u2103'),
+      ),
     );
   }
 }
