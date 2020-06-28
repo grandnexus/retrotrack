@@ -7,8 +7,8 @@ class FlareDanger extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SizedBox(
-      width: 72,
-      height: 72,
+      width: 32,
+      height: 32,
       child: FlareActor(
         'assets/Danger.flr',
         animation: 'spin',
