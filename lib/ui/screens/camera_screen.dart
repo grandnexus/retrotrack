@@ -113,8 +113,7 @@ class CameraScreen extends StatelessWidget {
             onPressed: cameraProvider.isLoading
                 ? null
                 : () async {
-                    final bool dataTaken =
-                        await cameraProvider.takePhoto(context);
+                    final bool dataTaken = await cameraProvider.takePhoto();
                     if (dataTaken) {
                       Navigator.pop(context, true);
                       Provider.of<FeedProvider>(context, listen: false)

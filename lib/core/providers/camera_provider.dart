@@ -12,10 +12,11 @@ import 'package:retrotrack/core/models/index.dart' show LogEntry, Temperature;
 enum Selection { person, temperature, done }
 
 class CameraProvider extends ChangeNotifier {
-  CameraProvider(this.cameraDescription) {
+  CameraProvider(this.context, this.cameraDescription) {
     init(cameraDescription);
   }
 
+  final BuildContext context;
   final CameraDescription cameraDescription;
 
   bool _isLoading = false;
@@ -133,7 +134,7 @@ class CameraProvider extends ChangeNotifier {
     logEntryBox.add(logEntry);
   }
 
-  Future<bool> takePhoto(BuildContext context) async {
+  Future<bool> takePhoto() async {
     setIsLoading(true);
     if (currentSelection == Selection.done) {
       addLogEntry(logEntry);

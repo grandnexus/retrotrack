@@ -78,7 +78,8 @@ Future<void> main() async {
           '/': (_) => const AuthGuard(FeedScreen()),
           '/auth': (_) => const AuthScreen(),
           '/camera': (_) => ChangeNotifierProvider<CameraProvider>(
-                create: (_) => CameraProvider(cameras.first),
+                create: (BuildContext context) =>
+                    CameraProvider(context, cameras.first),
                 child: const CameraScreen(),
               ),
         },
