@@ -106,7 +106,17 @@ class _LogDisplay extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                    child: Image.file(File(log.photoUrl), fit: BoxFit.fitWidth),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.green[300],
+                        border: Border.all(
+                          width: 3.0,
+                          color: Colors.green[300],
+                        ),
+                      ),
+                      child:
+                          Image.file(File(log.photoUrl), fit: BoxFit.fitWidth),
+                    ),
                   ),
                   VerticalDivider(
                     color: Theme.of(context).primaryColor.withOpacity(0.75),
@@ -117,35 +127,56 @@ class _LogDisplay extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: log.people.map((Person p) {
-                          bool danger = false;
-                          if (p.temperature != null &&
-                              p.temperature.temperature != null)
-                            danger = p.temperature.temperature >= 37.5;
+                        children: log.people.map(
+                          (Person p) {
+                            bool danger = false;
+                            if (p.temperature != null &&
+                                p.temperature.temperature != null)
+                              danger = p.temperature.temperature >= 37.5;
 
-                          return Row(
-                            children: <Widget>[
-                              Image.file(File(p.photoUrl), height: 40),
-                              const Spacer(),
-                              Text(
-                                p.temperature.temperature.toString(),
-                                style: !danger
-                                    ? Theme.of(context).textTheme.bodyText1
-                                    : Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .copyWith(
-                                          color: const Color(0xFFD2001E),
+                            return Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.green[300],
+                                        border: Border.all(
+                                          width: 2.0,
+                                          color: Colors.green[300],
                                         ),
-                              ),
-                              if (danger)
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 8),
-                                  child: FlareDanger(),
-                                )
-                            ],
-                          );
-                        }).toList(),
+                                      ),
+                                      child: Image.file(File(p.photoUrl),
+                                          height: 40),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      '${p.temperature.temperature}°C',
+                                      style: !danger
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                                color: const Color(0xFFD2001E),
+                                              ),
+                                    ),
+                                    if (danger)
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 8),
+                                        child: FlareDanger(),
+                                      ),
+                                  ],
+                                ),
+                                const Divider(
+                                  thickness: 2.0,
+                                ),
+                              ],
+                            );
+                          },
+                        ).toList(),
                       ),
                     ),
                   ),
