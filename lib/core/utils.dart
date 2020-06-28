@@ -40,10 +40,12 @@ double convertRawTextToTemperature(String rawText) {
   double digits = 0.0;
   final String numberText =
       rawText.replaceAll(RegExp(r'([a-zA-Z])\w+'), '').trim();
-
   if (numberText.isNotEmpty) {
     if (isNumeric(numberText)) {
-      digits = double.parse(numberText) / 10;
+      digits = double.parse(numberText);
+      if (digits > 100) {
+        digits /= 10;
+      }
     }
   }
 
@@ -134,8 +136,6 @@ Future<LogEntry> processCropFaceImage(File imageFile) async {
       painter, Size(image.width.toDouble(), image.height.toDouble()));
 
   final String imagePath = await saveImageToPath(customImage);
-
-  print('imagePath $imagePath');
 
   final LogEntry logEntry = LogEntry(
     photoUrl: imagePath,
