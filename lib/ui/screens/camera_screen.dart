@@ -34,7 +34,6 @@ class CameraScreen extends StatelessWidget {
                   );
                 }),
             // Preview
-
             Positioned(
               left: 0,
               bottom: 0,
@@ -113,7 +112,7 @@ class TemperatureSection extends StatelessWidget {
         _people.length,
         (int index) => ImageCard(
           _people[index].temperature.photo,
-          camera.getFABText(Selection.temperature),
+          _people[index].temperature.temperature.toString(),
           camera.currentSelection == Selection.temperature,
         ),
       ),
