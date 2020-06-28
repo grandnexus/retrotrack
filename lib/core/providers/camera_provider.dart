@@ -71,8 +71,6 @@ class CameraProvider extends ChangeNotifier {
     final Box<LogEntry> logEntryBox = await Hive.openBox('log_entries');
 
     logEntryBox.add(logEntry);
-
-    print(logEntryBox.getAt(0));
   }
 
   Future<void> takePhoto(BuildContext context) async {
@@ -110,6 +108,7 @@ class CameraProvider extends ChangeNotifier {
         );
         setTemperature(await processThermometerImage(compressedFile));
         logEntry.people[0].temperature.photo = temperature.photo;
+        logEntry.people[0].temperature.temperature = temperature.temperature;
         setCurrentSelection(Selection.done);
       }
     } catch (e) {
