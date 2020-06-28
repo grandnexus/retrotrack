@@ -31,7 +31,14 @@ class CameraScreen extends StatelessWidget {
 
                 return AspectRatio(
                   aspectRatio: cameraProvider.controller.value.aspectRatio,
-                  child: CameraPreview(cameraProvider.controller),
+                  child: Stack(
+                    children: <Widget>[
+                      CameraPreview(cameraProvider.controller),
+                      Container(
+                        color: Theme.of(context).primaryColor.withOpacity(0.3),
+                      )
+                    ],
+                  ),
                 );
               },
             ),
@@ -106,7 +113,8 @@ class CameraScreen extends StatelessWidget {
             onPressed: cameraProvider.isLoading
                 ? null
                 : () async {
-                    final bool dataTaken = await cameraProvider.takePhoto();
+                    final bool dataTaken =
+                        await cameraProvider.takePhoto(context);
                     if (dataTaken) {
                       Navigator.pop(context, true);
                       Provider.of<FeedProvider>(context, listen: false)

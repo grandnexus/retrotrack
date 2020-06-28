@@ -38,6 +38,10 @@ Future<void> main() async {
           scaffoldBackgroundColor: Colors.black,
           splashColor: Colors.transparent,
           highlightColor: Colors.grey[900],
+          snackBarTheme: const SnackBarThemeData(
+            actionTextColor: Colors.white,
+            backgroundColor: brightGreen,
+          ),
 
           //
           textTheme: GoogleFonts.sourceCodeProTextTheme(

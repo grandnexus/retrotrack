@@ -133,7 +133,7 @@ class CameraProvider extends ChangeNotifier {
     logEntryBox.add(logEntry);
   }
 
-  Future<bool> takePhoto() async {
+  Future<bool> takePhoto(BuildContext context) async {
     setIsLoading(true);
     if (currentSelection == Selection.done) {
       addLogEntry(logEntry);
@@ -157,7 +157,20 @@ class CameraProvider extends ChangeNotifier {
           ),
         );
         setLogEntry(await processCropFaceImage(compressedFile));
-        setCurrentSelection(Selection.temperature);
+
+        if (logEntry != null) {
+          if (logEntry.people != null) {
+            if (logEntry.people.isNotEmpty) {
+              setCurrentSelection(Selection.temperature);
+            } else {
+              checkTakePhotoErrors(context);
+            }
+          } else {
+            checkTakePhotoErrors(context);
+          }
+        } else {
+          checkTakePhotoErrors(context);
+        }
       } else if (currentSelection == Selection.temperature) {
         setThermometerImagePath(path);
         final File compressedFile = await compressImageFile(
@@ -189,18 +202,40 @@ class CameraProvider extends ChangeNotifier {
           setCurrentSelection(Selection.person);
         }
       }
-      _scaffoldKey.currentState.removeCurrentSnackBar();
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          duration: const Duration(hours: 1),
-        ),
-      );
+
+      checkTakePhotoErrors(context);
+
       setIsLoading(false);
     }
     setIsLoading(false);
 
     return false;
+  }
+
+  void checkTakePhotoErrors(BuildContext context) {
+    if (_currentSelection == Selection.person) {
+      showSnackBarMessage(context, '👾 Person not detected!');
+    } else if (_currentSelection == Selection.temperature) {
+      showSnackBarMessage(context, '👾 Temperature not detected!');
+    } else {
+      showSnackBarMessage(context, '👾 Error has detected!');
+    }
+  }
+
+  void showSnackBarMessage(BuildContext context, String message) {
+    _scaffoldKey.currentState.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: Theme.of(context).textTheme.caption.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        duration: const Duration(milliseconds: 3000),
+      ),
+    );
   }
 
   String getFABText(Selection selection) {
