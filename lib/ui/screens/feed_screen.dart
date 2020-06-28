@@ -20,7 +20,6 @@ class FeedScreen extends StatelessWidget {
               color: Colors.black,
               bgColor: Theme.of(context).primaryColor,
             ),
-            const Divider(),
             Expanded(
               child: ScrollConfiguration(
                 behavior: const NoneScrollBehavior(),
@@ -119,11 +118,24 @@ class _LogDisplay extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: log.people.map((Person p) {
+                          final bool danger = p.temperature.temperature >= 37.5;
+
                           return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Image.file(File(p.photoUrl), height: 40),
-                              Text(p.temperature.temperature.toString()),
+                              const Spacer(),
+                              Text(
+                                p.temperature.temperature.toString(),
+                                style: !danger
+                                    ? Theme.of(context).textTheme.bodyText1
+                                    : Theme.of(context).textTheme.subtitle1,
+                              ),
+                              if (danger)
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Icon(Icons.error_outline,
+                                      color: Colors.red),
+                                )
                             ],
                           );
                         }).toList(),
