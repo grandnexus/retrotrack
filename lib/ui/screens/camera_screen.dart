@@ -22,28 +22,32 @@ class CameraScreen extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           children: <Widget>[
             FutureBuilder<void>(
-                future: cameraProvider.controller.initialize(),
-                builder: (_, AsyncSnapshot<void> snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+              future: cameraProvider.controller.initialize(),
+              builder: (_, AsyncSnapshot<void> snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-                  return AspectRatio(
-                    aspectRatio: cameraProvider.controller.value.aspectRatio,
-                    child: CameraPreview(cameraProvider.controller),
-                  );
-                }),
+                return AspectRatio(
+                  aspectRatio: cameraProvider.controller.value.aspectRatio,
+                  child: CameraPreview(cameraProvider.controller),
+                );
+              },
+            ),
             // Preview
+
             Positioned(
               left: 0,
               bottom: 0,
               child: Consumer<CameraProvider>(
                 builder: (_, CameraProvider cameraProvider, __) {
-                  return Column(
-                    children: <Widget>[
-                      PeopleSection(cameraProvider),
-                      TemperatureSection(cameraProvider),
-                    ],
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      children: <Widget>[
+                        PreviewSection(cameraProvider),
+                      ],
+                    ),
                   );
                 },
               ),
@@ -51,6 +55,7 @@ class CameraScreen extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Consumer<CameraProvider>(
         builder: (_, CameraProvider cameraProvider, __) {
           return FloatingActionButton.extended(
@@ -68,8 +73,8 @@ class CameraScreen extends StatelessWidget {
   }
 }
 
-class PeopleSection extends StatelessWidget {
-  const PeopleSection(this.camera);
+class PreviewSection extends StatelessWidget {
+  const PreviewSection(this.camera);
 
   final CameraProvider camera;
 
@@ -81,40 +86,39 @@ class PeopleSection extends StatelessWidget {
 
     final List<Person> _people = camera.logEntry.people;
 
-    return Row(
-      children: List<ImageCard>.generate(
-        _people.length,
-        (int index) => ImageCard(
-          _people[index].photo,
-          camera.getFABText(Selection.person),
-          camera.currentSelection == Selection.person,
-        ),
-      ),
-    );
-  }
-}
-
-class TemperatureSection extends StatelessWidget {
-  const TemperatureSection(this.camera);
-
-  final CameraProvider camera;
-
-  @override
-  Widget build(BuildContext context) {
-    if (camera.logEntry == null) {
-      return const SizedBox.shrink();
-    }
-
-    final List<Person> _people = camera.logEntry.people;
-
-    return Row(
-      children: List<ImageCard>.generate(
-        _people.length,
-        (int index) => ImageCard(
-          _people[index].temperature.photo,
-          _people[index].temperature.temperature.toString(),
-          camera.currentSelection == Selection.temperature,
-        ),
+    return Container(
+      color: Colors.transparent,
+      height: 165,
+      margin: const EdgeInsets.all(10.0),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        children: List<Column>.generate(
+          _people.length,
+          (int index) => Column(
+            children: <Widget>[
+              ImageCard(
+                _people[index].photo,
+                camera.getFABText(Selection.person),
+                _people[index].isSelected,
+                // () => camera.selectPerson(index),
+                () => camera.selectAllPeople(),
+              ),
+              ImageCard(
+                _people[index].temperature.photo,
+                '${_people[index].temperature.temperature}',
+                _people[index].temperature.isSelected,
+                () => camera.selectTemperature(index),
+              ),
+            ],
+          ),
+        )..add(
+            Column(
+              children: const <Widget>[
+                SizedBox(width: 30.0),
+              ],
+            ),
+          ),
       ),
     );
   }

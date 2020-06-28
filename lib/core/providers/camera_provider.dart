@@ -21,8 +21,11 @@ class CameraProvider extends ChangeNotifier {
   LogEntry _logEntry;
   Temperature _temperature;
 
+  int _currentPersonIndex = 0;
+  int _currentTemperatureIndex = 0;
   String _peopleImagePath;
   String _thermometerImagePath;
+
   CameraController _controller;
   Selection _currentSelection;
 
@@ -30,6 +33,8 @@ class CameraProvider extends ChangeNotifier {
 
   LogEntry get logEntry => _logEntry;
   Temperature get temperature => _temperature;
+  int get currentPersonIndex => _currentPersonIndex;
+  int get currentTemperatureIndex => _currentTemperatureIndex;
   String get peopleImagePath => _peopleImagePath;
   String get thermometerImagePath => _thermometerImagePath;
   CameraController get controller => _controller;
@@ -64,6 +69,53 @@ class CameraProvider extends ChangeNotifier {
 
   void setTemperature(Temperature temperature) {
     _temperature = temperature;
+    notifyListeners();
+  }
+
+  void selectAllPeople() {
+    setCurrentSelection(Selection.person);
+
+    for (int i = 0; i < logEntry.people.length; i++) {
+      logEntry.people[i].isSelected = true;
+      logEntry.people[i].temperature.isSelected = false;
+    }
+
+    notifyListeners();
+  }
+
+  void selectPerson(int index) {
+    setCurrentSelection(Selection.person);
+    _currentPersonIndex = index;
+    for (int i = 0; i < logEntry.people.length; i++) {
+      logEntry.people[i].isSelected = false;
+      logEntry.people[i].temperature.isSelected = false;
+    }
+
+    logEntry.people[_currentPersonIndex].isSelected = true;
+    notifyListeners();
+  }
+
+  void selectTemperature(int index) {
+    setCurrentSelection(Selection.temperature);
+    _currentTemperatureIndex = index;
+
+    for (int i = 0; i < logEntry.people.length; i++) {
+      logEntry.people[i].isSelected = false;
+      logEntry.people[i].temperature.isSelected = false;
+    }
+    logEntry.people[_currentTemperatureIndex].temperature.isSelected = true;
+    notifyListeners();
+  }
+
+  void reset() {
+    _currentPersonIndex = 0;
+    _currentTemperatureIndex = 0;
+
+    for (int i = 0; i < logEntry.people.length; i++) {
+      logEntry.people[i].isSelected = false;
+      logEntry.people[i].temperature.isSelected = false;
+    }
+
     notifyListeners();
   }
 
@@ -107,9 +159,20 @@ class CameraProvider extends ChangeNotifier {
           ),
         );
         setTemperature(await processThermometerImage(compressedFile));
-        logEntry.people[0].temperature.photo = temperature.photo;
-        logEntry.people[0].temperature.temperature = temperature.temperature;
-        setCurrentSelection(Selection.done);
+        logEntry.people[_currentTemperatureIndex].temperature.photo =
+            temperature.photo;
+        logEntry.people[_currentTemperatureIndex].temperature.temperature =
+            temperature.temperature;
+        if (_currentTemperatureIndex < logEntry.people.length) {
+          _currentTemperatureIndex++;
+          if (_currentTemperatureIndex < logEntry.people.length) {
+            selectTemperature(_currentTemperatureIndex);
+          }
+        }
+        if (_currentTemperatureIndex == logEntry.people.length) {
+          reset();
+          setCurrentSelection(Selection.done);
+        }
       }
     } catch (e) {
       _scaffoldKey.currentState.removeCurrentSnackBar();

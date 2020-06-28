@@ -14,6 +14,7 @@ class Person extends HiveObject {
     this.photo,
     this.temperature,
     this.additionalInformation,
+    this.isSelected,
   });
 
   @HiveField(0)
@@ -32,4 +33,6 @@ class Person extends HiveObject {
   final String additionalInformation;
 
   Image photo;
+
+  bool isSelected = false;
 }

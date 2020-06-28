@@ -93,7 +93,8 @@ Future<LogEntry> processCropFaceImage(File imageFile) async {
   final FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
   final List<Face> detectedFaces = await faceDetector.processImage(visionImage);
 
-  for (final Face face in detectedFaces) {
+  for (int i = 0; i < detectedFaces.length; i++) {
+    final Face face = detectedFaces[i];
     boundingBoxes.add(face.boundingBox);
 
     final List<int> jpgInt = dart_image.encodeJpg(
@@ -114,15 +115,20 @@ Future<LogEntry> processCropFaceImage(File imageFile) async {
 
     images.add(croppedImage);
 
-    people.add(
-      Person(
-        1,
-        now,
-        imagePath,
-        temperature: Temperature(temperature: 0.0),
-        photo: croppedImage,
-      ),
+    final Person person = Person(
+      i,
+      now,
+      imagePath,
+      temperature: Temperature(temperature: 0.0, isSelected: false),
+      photo: croppedImage,
+      isSelected: false,
     );
+
+    if (i == 0) {
+      person.temperature.isSelected = true;
+    }
+
+    people.add(person);
   }
 
   final BoundingBoxPainter painter = BoundingBoxPainter(

@@ -13,6 +13,7 @@ class Temperature extends HiveObject {
     this.boundingBox,
     this.photo,
     this.originalPhoto,
+    this.isSelected,
   });
 
   @HiveField(0)
@@ -33,4 +34,6 @@ class Temperature extends HiveObject {
   final CustomPaint originalPhoto;
 
   Image photo;
+
+  bool isSelected = false;
 }
