@@ -37,7 +37,7 @@ class FeedScreen extends StatelessWidget {
                               RetroOutlineButton(
                                 text: 'Refresh',
                                 onPressed: () async => feed.refresh(),
-                              )
+                              ),
                             ],
                           ),
                         );

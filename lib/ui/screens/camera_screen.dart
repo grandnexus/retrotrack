@@ -5,6 +5,7 @@ import 'package:retrotrack/core/index.dart';
 import 'package:retrotrack/core/models/person.dart';
 import 'package:retrotrack/ui/index.dart';
 import 'package:retrotrack/ui/widgets/image_card.dart';
+import 'package:retrotrack/ui/widgets/retro_back_button.dart';
 
 class CameraScreen extends StatelessWidget {
   const CameraScreen();
@@ -34,7 +35,6 @@ class CameraScreen extends StatelessWidget {
               },
             ),
             // Preview
-
             Positioned(
               left: 0,
               bottom: 0,
@@ -49,6 +49,18 @@ class CameraScreen extends StatelessWidget {
                     ),
                   );
                 },
+              ),
+            ),
+            Positioned(
+              left: 0,
+              top: -6,
+              child: Container(
+                width: 50,
+                height: 50,
+                child: RetroBackButton(
+                  text: 'Back',
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
               ),
             ),
           ],
