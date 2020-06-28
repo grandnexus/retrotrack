@@ -13,7 +13,7 @@ class RetroOutlineButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlineButton(
       borderSide: BorderSide(
-        color: Theme.of(context).primaryColorLight,
+        color: Theme.of(context).primaryColor.withOpacity(0.5),
       ),
       onPressed: onPressed,
       child: Text(text.toUpperCase()),

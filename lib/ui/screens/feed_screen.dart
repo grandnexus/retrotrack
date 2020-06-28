@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:retrotrack/core/index.dart';
@@ -14,7 +16,10 @@ class FeedScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const Logo(),
+            Logo(
+              color: Colors.black,
+              bgColor: Theme.of(context).primaryColor,
+            ),
             const Divider(),
             Expanded(
               child: ScrollConfiguration(
@@ -25,7 +30,18 @@ class FeedScreen extends StatelessWidget {
                       return const Center(child: Text('LOADING...'));
                     } else {
                       if (feed.list.isEmpty) {
-                        return const Center(child: Text('NO ENTRY'));
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const Text('NO ENTRY'),
+                              RetroOutlineButton(
+                                text: 'Refresh',
+                                onPressed: () async => feed.refresh(),
+                              )
+                            ],
+                          ),
+                        );
                       }
                       return RefreshIndicator(
                         onRefresh: () async {
@@ -33,12 +49,11 @@ class FeedScreen extends StatelessWidget {
                         },
                         child: ListView.separated(
                           itemCount: feed.list.length,
-                          separatorBuilder: (_, __) => const Divider(
-                            indent: 16,
-                            endIndent: 16,
-                          ),
+                          separatorBuilder: (_, __) => const Divider(),
                           itemBuilder: (_, int index) {
-                            return _ListTile(feed.list[index]);
+                            return _LogDisplay(
+                              feed.list[feed.list.length - index - 1],
+                            );
                           },
                         ),
                       );
@@ -55,8 +70,8 @@ class FeedScreen extends StatelessWidget {
   }
 }
 
-class _ListTile extends StatelessWidget {
-  const _ListTile(this.log);
+class _LogDisplay extends StatelessWidget {
+  const _LogDisplay(this.log);
 
   final LogEntry log;
 
@@ -66,25 +81,60 @@ class _ListTile extends StatelessWidget {
     final GlobalKey<SnappableState> key = GlobalKey<SnappableState>();
     final FeedProvider feed = Provider.of<FeedProvider>(context);
 
-    return Snappable(
-      key: key,
-      duration: snapDuration,
-      child: ListTile(
-        onLongPress: () async {
-          final bool res = await showDialog<bool>(
-            context: context,
-            barrierDismissible: false,
-            builder: (_) => _DeleteDialog(),
-          );
-          if (res) {
-            key.currentState.snap().then((_) async {
-              await Future<void>.delayed(snapDuration);
-              feed.removeFromList(log);
-            });
-          }
-        },
-        title: Text(log.people.length.toString()),
-        trailing: const Text('37.0\u2103'),
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Snappable(
+        key: key,
+        duration: snapDuration,
+        child: GestureDetector(
+          onLongPress: () async {
+            final bool res = await showDialog<bool>(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => _DeleteDialog(),
+            );
+            if (res) {
+              key.currentState.snap().then((_) async {
+                await Future<void>.delayed(snapDuration);
+                feed.removeFromList(log);
+              });
+            }
+          },
+          child: InkWell(
+            onTap: () {},
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Image.file(File(log.photoUrl), fit: BoxFit.fitWidth),
+                  ),
+                  VerticalDivider(
+                    color: Theme.of(context).primaryColor.withOpacity(0.75),
+                    width: 16,
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: log.people.map((Person p) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Image.file(File(p.photoUrl), height: 40),
+                              Text(p.temperature.temperature.toString()),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
