@@ -11,14 +11,19 @@ import 'package:retrotrack/ui/index.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  const Color brightGreen = Color(0xFF87FB93);
+
+  final List<CameraDescription> cameras = await availableCameras();
+  CameraDescription currentCamera;
+
+  if (cameras.isNotEmpty) {
+    currentCamera = cameras.first;
+  }
+
   await Hive.initFlutter();
   Hive.registerAdapter(TemperatureAdapter());
   Hive.registerAdapter(PersonAdapter());
   Hive.registerAdapter(LogEntryAdapter());
-
-  final List<CameraDescription> cameras = await availableCameras();
-
-  const Color brightGreen = Color(0xFF87FB93);
 
   runApp(
     MultiProvider(
@@ -79,7 +84,7 @@ Future<void> main() async {
           '/auth': (_) => const AuthScreen(),
           '/camera': (_) => ChangeNotifierProvider<CameraProvider>(
                 create: (BuildContext context) =>
-                    CameraProvider(context, cameras.first),
+                    CameraProvider(context, currentCamera),
                 child: const CameraScreen(),
               ),
         },

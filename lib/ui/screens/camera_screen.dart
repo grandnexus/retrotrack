@@ -16,6 +16,26 @@ class CameraScreen extends StatelessWidget {
     final CameraProvider cameraProvider =
         Provider.of<CameraProvider>(context, listen: false);
 
+    if (cameraProvider.controller == null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Logo(showImage: true),
+              const Text('Camera is not available on this device.'),
+              const SizedBox(height: 10.0),
+              RetroBackButton(
+                text: 'Back',
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       key: cameraProvider.scaffoldKey,
       body: RetroBody(
