@@ -22,7 +22,7 @@ Future<void> main() async {
 
   runApp(
     MultiProvider(
-      providers: [
+      providers: <ChangeNotifierProvider<dynamic>>[
         ChangeNotifierProvider<SessionProvider>(
           create: (_) => SessionProvider(),
         ),
