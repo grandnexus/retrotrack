@@ -18,6 +18,8 @@ class CameraProvider extends ChangeNotifier {
 
   final CameraDescription cameraDescription;
 
+  bool _isLoading = false;
+
   LogEntry _logEntry;
   Temperature _temperature;
 
@@ -31,6 +33,7 @@ class CameraProvider extends ChangeNotifier {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool get isLoading => _isLoading;
   LogEntry get logEntry => _logEntry;
   Temperature get temperature => _temperature;
   int get currentPersonIndex => _currentPersonIndex;
@@ -44,6 +47,11 @@ class CameraProvider extends ChangeNotifier {
   void init(CameraDescription cameraDescription) {
     _controller = CameraController(cameraDescription, ResolutionPreset.high);
     _currentSelection = Selection.person;
+    notifyListeners();
+  }
+
+  void setIsLoading(bool loading) {
+    _isLoading = loading;
     notifyListeners();
   }
 
@@ -126,6 +134,7 @@ class CameraProvider extends ChangeNotifier {
   }
 
   Future<bool> takePhoto() async {
+    setIsLoading(true);
     if (currentSelection == Selection.done) {
       addLogEntry(logEntry);
       return true;
@@ -137,8 +146,6 @@ class CameraProvider extends ChangeNotifier {
           join((await getExternalStorageDirectory()).path, '$id.jpg');
 
       await controller.takePicture(path);
-
-      print(path);
 
       if (currentSelection == Selection.person) {
         setPeopleImagePath(path);
@@ -177,6 +184,11 @@ class CameraProvider extends ChangeNotifier {
         }
       }
     } catch (e) {
+      if (logEntry != null) {
+        if (logEntry.people == null) {
+          setCurrentSelection(Selection.person);
+        }
+      }
       _scaffoldKey.currentState.removeCurrentSnackBar();
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -184,8 +196,9 @@ class CameraProvider extends ChangeNotifier {
           duration: const Duration(hours: 1),
         ),
       );
+      setIsLoading(false);
     }
-    notifyListeners();
+    setIsLoading(false);
 
     return false;
   }

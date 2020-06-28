@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:retrotrack/core/index.dart';
 import 'package:retrotrack/core/models/person.dart';
 import 'package:retrotrack/ui/index.dart';
+import 'package:retrotrack/ui/widgets/flare_loading.dart';
 import 'package:retrotrack/ui/widgets/image_card.dart';
 import 'package:retrotrack/ui/widgets/retro_back_button.dart';
 
@@ -34,6 +35,18 @@ class CameraScreen extends StatelessWidget {
                 );
               },
             ),
+            Positioned(
+              left: 0,
+              top: -6,
+              child: Container(
+                width: 50,
+                height: 50,
+                child: RetroBackButton(
+                  text: 'Back',
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ),
             // Preview
             Positioned(
               left: 0,
@@ -51,17 +64,19 @@ class CameraScreen extends StatelessWidget {
                 },
               ),
             ),
-            Positioned(
-              left: 0,
-              top: -6,
-              child: Container(
-                width: 50,
-                height: 50,
-                child: RetroBackButton(
-                  text: 'Back',
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
+
+            Consumer<CameraProvider>(
+              builder: (_, CameraProvider cameraProvider, __) {
+                if (cameraProvider.isLoading)
+                  return const Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: FlareLoading(),
+                    ),
+                  );
+
+                return const SizedBox.shrink();
+              },
             ),
           ],
         ),
@@ -70,19 +85,34 @@ class CameraScreen extends StatelessWidget {
       floatingActionButton: Consumer<CameraProvider>(
         builder: (_, CameraProvider cameraProvider, __) {
           return FloatingActionButton.extended(
-            icon: cameraProvider.currentSelection != Selection.done
-                ? const Icon(Icons.camera_alt)
-                : const Icon(Icons.save),
-            label: Text(
-              cameraProvider.getFABText(cameraProvider.currentSelection),
-            ),
-            onPressed: () async {
-              final bool dataTaken = await cameraProvider.takePhoto();
-              if (dataTaken) {
-                Navigator.pop(context, true);
-                Provider.of<FeedProvider>(context, listen: false).refresh();
-              }
-            },
+            icon: cameraProvider.isLoading
+                ? null
+                : cameraProvider.currentSelection != Selection.done
+                    ? const Icon(Icons.camera_alt)
+                    : const Icon(Icons.save),
+            label: cameraProvider.isLoading
+                ? Container(
+                    width: 100,
+                    height: 10.0,
+                    child: LinearProgressIndicator(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
+                  )
+                : Text(
+                    cameraProvider.getFABText(cameraProvider.currentSelection),
+                  ),
+            onPressed: cameraProvider.isLoading
+                ? null
+                : () async {
+                    final bool dataTaken = await cameraProvider.takePhoto();
+                    if (dataTaken) {
+                      Navigator.pop(context, true);
+                      Provider.of<FeedProvider>(context, listen: false)
+                          .refresh();
+                    }
+                  },
           );
         },
       ),
