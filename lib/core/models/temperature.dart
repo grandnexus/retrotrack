@@ -25,7 +25,7 @@ class Temperature extends HiveObject {
   final String translatedText;
 
   @HiveField(3)
-  final double temperature;
+  double temperature;
 
   @HiveField(4)
   final Rect boundingBox;
