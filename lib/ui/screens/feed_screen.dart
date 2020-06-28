@@ -133,8 +133,7 @@ class _LogDisplay extends StatelessWidget {
                               if (danger)
                                 const Padding(
                                   padding: EdgeInsets.only(left: 8),
-                                  child: Icon(Icons.error_outline,
-                                      color: Colors.red),
+                                  child: FlareDanger(),
                                 )
                             ],
                           );

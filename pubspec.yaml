@@ -24,6 +24,7 @@ dependencies:
   path_provider: ^1.6.11
   provider: ^4.1.3
   snappable: ^1.0.1
+  flare_flutter: 2.0.3
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +36,9 @@ dependency_overrides:
   dartx: ">=0.2.0 <1.0.0"
   path: ">=1.6.0 <2.0.0"
 
-
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/Danger.flr
+  
