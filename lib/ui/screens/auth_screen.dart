@@ -9,6 +9,7 @@ class AuthScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: always_specify_types
     return Consumer((_, read) {
       final SessionProvider session = read(sessionProvider).state;
       if (session.isAuth) {

@@ -19,7 +19,7 @@ class PersonAdapter extends TypeAdapter<Person> {
     return Person(
       fields[0] as int,
       fields[1] as DateTime,
-      fields[2] as Image,
+      fields[2] as String,
       temperature: fields[3] as Temperature,
       additionalInformation: fields[4] as String,
     );
@@ -34,7 +34,7 @@ class PersonAdapter extends TypeAdapter<Person> {
       ..writeByte(1)
       ..write(obj.timestamp)
       ..writeByte(2)
-      ..write(obj.photo)
+      ..write(obj.photoUrl)
       ..writeByte(3)
       ..write(obj.temperature)
       ..writeByte(4)

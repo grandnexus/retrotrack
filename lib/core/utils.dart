@@ -7,6 +7,8 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart' as dart_image;
+
+import 'package:path_provider/path_provider.dart';
 import 'package:retrotrack/core/models/index.dart';
 
 import 'package:retrotrack/core/paints.dart';
@@ -48,6 +50,32 @@ double convertRawTextToTemperature(String rawText) {
   return digits;
 }
 
+Future<ui.Image> convertCustomPaintToImage(
+    BoundingBoxPainter customPaint, Size size) async {
+  final ui.PictureRecorder recorder = ui.PictureRecorder();
+  final Canvas canvas = Canvas(recorder);
+
+  customPaint.paint(canvas, size);
+  return await recorder
+      .endRecording()
+      .toImage(size.width.floor(), size.height.floor());
+}
+
+Future<String> saveImageToPath(ui.Image image) async {
+  final ByteData pngBytes =
+      await image.toByteData(format: ui.ImageByteFormat.png);
+
+  final Directory directory = await getExternalStorageDirectory();
+  final String path = directory.path;
+  final String imagePath = '$path/images/${generateId()}.png';
+
+  await Directory('$path/images').create(recursive: true);
+  File('$path/images/${generateId()}.png')
+      .writeAsBytesSync(pngBytes.buffer.asInt8List());
+
+  return imagePath;
+}
+
 Future<LogEntry> processCropFaceImage(File imageFile) async {
   final DateTime now = DateTime.now();
   final List<Image> images = <Image>[];
@@ -77,19 +105,43 @@ Future<LogEntry> processCropFaceImage(File imageFile) async {
     );
     final Image croppedImage = Image.memory(jpgInt as Uint8List);
 
+    final Directory directory = await getExternalStorageDirectory();
+    final String path = directory.path;
+    final String imagePath = '$path/images/${generateId()}.png';
+    File(imagePath).writeAsBytesSync(jpgInt);
+
     images.add(croppedImage);
-    people.add(Person(1, now, croppedImage, temperature: Temperature()));
+
+    people.add(
+      Person(
+        1,
+        now,
+        imagePath,
+        temperature: Temperature(),
+        photo: croppedImage,
+      ),
+    );
   }
 
+  final BoundingBoxPainter painter = BoundingBoxPainter(
+    rect: boundingBoxes,
+    imageFile: image,
+  );
+
+  final CustomPaint paint = CustomPaint(painter: painter);
+
+  final ui.Image customImage = await convertCustomPaintToImage(
+      painter, Size(image.width.toDouble(), image.height.toDouble()));
+
+  final String imagePath = await saveImageToPath(customImage);
+
+  print('imagePath $imagePath');
+
   final LogEntry logEntry = LogEntry(
-    CustomPaint(
-      painter: BoundingBoxPainter(
-        rect: boundingBoxes,
-        imageFile: image,
-      ),
-    ),
-    images,
-    people,
+    photoUrl: imagePath,
+    photo: paint,
+    detectedFaces: images,
+    people: people,
   );
 
   faceDetector.close();
@@ -100,6 +152,7 @@ Future<LogEntry> processCropFaceImage(File imageFile) async {
 Future<Temperature> processThermometerImage(File imageFile) async {
   Rect boundingBox;
   Image croppedImage;
+  String croppedImagePath;
   String temperatureString;
   double temperatureValue;
   bool isTemperatureFound = false;
@@ -135,18 +188,31 @@ Future<Temperature> processThermometerImage(File imageFile) async {
         ),
       );
       croppedImage = Image.memory(jpgInt as Uint8List);
+      final Directory directory = await getExternalStorageDirectory();
+      final String path = directory.path;
+      croppedImagePath = '$path/images/${generateId()}.png';
+      File(croppedImagePath).writeAsBytesSync(jpgInt);
     }
   }
 
   if (isTemperatureFound) {
+    final BoundingBoxPainter painter = BoundingBoxPainter(
+      rect: <Rect>[boundingBox],
+      imageFile: image,
+    );
+
+    final CustomPaint paint = CustomPaint(painter: painter);
+
+    final ui.Image customImage = await convertCustomPaintToImage(
+        painter, Size(image.width.toDouble(), image.height.toDouble()));
+
+    final String imagePath = await saveImageToPath(customImage);
+
     temperature = Temperature(
       photo: croppedImage,
-      originalPhoto: CustomPaint(
-        painter: BoundingBoxPainter(
-          rect: <Rect>[boundingBox],
-          imageFile: image,
-        ),
-      ),
+      photoUrl: croppedImagePath,
+      originalPhoto: paint,
+      originalPhotoUrl: imagePath,
       translatedText: temperatureString,
       temperature: temperatureValue,
       boundingBox: boundingBox,

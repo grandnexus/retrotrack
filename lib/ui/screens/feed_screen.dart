@@ -106,6 +106,7 @@ class _DeleteDialog extends StatelessWidget {
   }
 }
 
+// ignore: unused_element
 class _LogoutButton extends HookWidget {
   const _LogoutButton();
 

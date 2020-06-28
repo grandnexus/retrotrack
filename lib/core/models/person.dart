@@ -10,7 +10,8 @@ class Person extends HiveObject {
   Person(
     this.id,
     this.timestamp,
-    this.photo, {
+    this.photoUrl, {
+    this.photo,
     this.temperature,
     this.additionalInformation,
   });
@@ -22,11 +23,13 @@ class Person extends HiveObject {
   final DateTime timestamp;
 
   @HiveField(2)
-  final Image photo;
+  final String photoUrl;
 
   @HiveField(3)
-  final Temperature temperature;
+  Temperature temperature;
 
   @HiveField(4)
   final String additionalInformation;
+
+  Image photo;
 }
