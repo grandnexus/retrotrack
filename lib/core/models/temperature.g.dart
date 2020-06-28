@@ -17,8 +17,8 @@ class TemperatureAdapter extends TypeAdapter<Temperature> {
       for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Temperature(
-      photo: fields[0] as Image,
-      originalPhoto: fields[1] as CustomPaint,
+      photoUrl: fields[0] as String,
+      originalPhotoUrl: fields[1] as String,
       translatedText: fields[2] as String,
       temperature: fields[3] as double,
       boundingBox: fields[4] as Rect,
@@ -30,9 +30,9 @@ class TemperatureAdapter extends TypeAdapter<Temperature> {
     writer
       ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.photo)
+      ..write(obj.photoUrl)
       ..writeByte(1)
-      ..write(obj.originalPhoto)
+      ..write(obj.originalPhotoUrl)
       ..writeByte(2)
       ..write(obj.translatedText)
       ..writeByte(3)

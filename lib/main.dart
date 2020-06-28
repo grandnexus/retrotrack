@@ -18,10 +18,6 @@ Future<void> main() async {
   Hive.registerAdapter(PersonAdapter());
   Hive.registerAdapter(LogEntryAdapter());
 
-  final Box<LogEntry> logEntryLog = await Hive.openBox('log_entry');
-
-  print(logEntryLog);
-
   final List<CameraDescription> cameras = await availableCameras();
 
   runApp(
@@ -76,7 +72,7 @@ Future<void> main() async {
           '/auth': (_) => const AuthScreen(),
           '/camera': (_) => ChangeNotifierProvider<CameraProvider>(
                 create: (_) => CameraProvider(cameras.first),
-                child: CameraScreen(),
+                child: const CameraScreen(),
               ),
         },
       ),
