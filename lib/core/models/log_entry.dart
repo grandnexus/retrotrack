@@ -7,18 +7,20 @@ part 'log_entry.g.dart';
 
 @HiveType(typeId: 3)
 class LogEntry extends HiveObject {
-  LogEntry(
+  LogEntry({
+    this.photoUrl,
+    this.people,
     this.photo,
     this.detectedFaces,
-    this.people,
-  );
+  });
 
   @HiveField(0)
-  final CustomPaint photo;
+  final String photoUrl;
 
   @HiveField(1)
-  final List<Image> detectedFaces;
-
-  @HiveField(2)
   final List<Person> people;
+
+  final CustomPaint photo;
+
+  final List<Image> detectedFaces;
 }

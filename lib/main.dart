@@ -16,10 +16,6 @@ Future<void> main() async {
   Hive.registerAdapter(PersonAdapter());
   Hive.registerAdapter(LogEntryAdapter());
 
-  final Box<LogEntry> logEntryLog = await Hive.openBox('log_entry');
-
-  print(logEntryLog);
-
   final List<CameraDescription> cameras = await availableCameras();
 
   runApp(

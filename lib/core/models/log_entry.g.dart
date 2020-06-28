@@ -17,21 +17,18 @@ class LogEntryAdapter extends TypeAdapter<LogEntry> {
       for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return LogEntry(
-      fields[0] as CustomPaint,
-      (fields[1] as List)?.cast<Image>(),
-      (fields[2] as List)?.cast<Person>(),
+      photoUrl: fields[0] as String,
+      people: (fields[1] as List)?.cast<Person>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, LogEntry obj) {
     writer
-      ..writeByte(3)
-      ..writeByte(0)
-      ..write(obj.photo)
-      ..writeByte(1)
-      ..write(obj.detectedFaces)
       ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.photoUrl)
+      ..writeByte(1)
       ..write(obj.people);
   }
 }

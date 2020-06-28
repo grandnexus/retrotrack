@@ -6,18 +6,20 @@ part 'temperature.g.dart';
 @HiveType(typeId: 0)
 class Temperature extends HiveObject {
   Temperature({
-    this.photo,
-    this.originalPhoto,
+    this.photoUrl,
+    this.originalPhotoUrl,
     this.translatedText,
     this.temperature,
     this.boundingBox,
+    this.photo,
+    this.originalPhoto,
   });
 
   @HiveField(0)
-  Image photo;
+  final String photoUrl;
 
   @HiveField(1)
-  final CustomPaint originalPhoto;
+  final String originalPhotoUrl;
 
   @HiveField(2)
   final String translatedText;
@@ -27,4 +29,8 @@ class Temperature extends HiveObject {
 
   @HiveField(4)
   final Rect boundingBox;
+
+  final CustomPaint originalPhoto;
+
+  Image photo;
 }

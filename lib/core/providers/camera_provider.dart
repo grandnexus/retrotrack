@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:retrotrack/core/index.dart';
@@ -66,8 +67,17 @@ class CameraProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> addLogEntry(LogEntry logEntry) async {
+    final Box<LogEntry> logEntryBox = await Hive.openBox('log_entries');
+
+    logEntryBox.add(logEntry);
+
+    print(logEntryBox.getAt(0));
+  }
+
   Future<void> takePhoto(BuildContext context) async {
     if (currentSelection == Selection.done) {
+      addLogEntry(logEntry);
       Navigator.pop(context);
     }
 
