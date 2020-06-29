@@ -1,9 +1,8 @@
-## Retrotrack
-<a href="https://youtu.be/42XTS2c7Grw" target="_black"> <img src='screenshots/thumbnail.png' width='700' alt="Retrotrack Demo Video"/></a>
-<br/><br/>
 # Retrotrack: A retro ML-powered mass facial tracking app to record temperatures within seconds by capturing a welfie photo and thermometer screen result.
-## Co-developed by Jason Choo (@grandnexus) and Philip Ch'ng (@pczn0327).
-<br/><br/>
+<a href="https://youtu.be/42XTS2c7Grw" target="_black"> <img src='/screenshots/thumbnail.jpg' width='700' alt="Retrotrack Demo Video"/></a>
+<br/>
+### Co-developed by Jason Choo (@grandnexus) and Philip Ch'ng (@pczn0327).
+<br/>
 Retrotrack is a [Flutter](https://flutter.dev) retro facial temperature tracking app built in futuristic fashion powered by [Firebase Machine Learning](https://firebase.google.com/docs/ml).
 <br/>
 The app is developed to empower mass temperature tracking within minutes. All you have to do is take a selfie or welfie photo and capture the snapshot of each person's temperature result from a thermometer screen.
