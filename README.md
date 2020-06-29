@@ -8,7 +8,7 @@ Retrotrack is a [Flutter](https://flutter.dev) retro facial temperature tracking
 
 The app is developed to empower mass temperature tracking within minutes. All you have to do is take a selfie or welfie photo and capture the snapshot of each person's temperature result from a thermometer screen.
 
-Since we have to take our temperatures everyday and during my visits to different location, Retrotrack makes temperature taking fun and easy. This app can be used in both private and public spaces such as shopping malls, workplaces, schools and even private events.
+Since we have to take our temperatures everyday and during our visits to different location, Retrotrack makes temperature taking fun and easy. This app can be used in both private and public spaces such as shopping malls, workplaces, schools and even private events.
 
 The design of the app is inspired by the popular video game called [Fallout](https://fallout.bethesda.net/en/) which depicts the life after post-apocalyptic world in a wasteland.
 
