@@ -1,19 +1,19 @@
 # Retrotrack: A retro ML-powered mass facial tracking app to record temperatures within seconds by capturing a welfie photo and thermometer screen result.
 <a href="https://youtu.be/42XTS2c7Grw" target="_blank"><img src='/screenshots/thumbnail.jpg' width='700' alt="Retrotrack Demo Video"/></a>
 <a href="https://youtu.be/42XTS2c7Grw" target="_blank">Retrotrack Demo Video</a>
-<br/>
+
 ### Co-developed by Jason Choo (@grandnexus) and Philip Ch'ng (@pczn0327).
-<br/>
+
 Retrotrack is a [Flutter](https://flutter.dev) retro facial temperature tracking app built in futuristic fashion powered by [Firebase Machine Learning](https://firebase.google.com/docs/ml).
-<br/>
+
 The app is developed to empower mass temperature tracking within minutes. All you have to do is take a selfie or welfie photo and capture the snapshot of each person's temperature result from a thermometer screen.
-<br/>
+
 Since we have to take our temperatures everyday and during my visits to different location, Retrotrack makes temperature taking fun and easy. This app can be used in both private and public spaces such as shopping malls, workplaces, schools and even private events.
-<br/>
+
 The design of the app is inspired by the popular video game called [Fallout](https://fallout.bethesda.net/en/) which depicts the life after post-apocalyptic world in a wasteland.
-<br/>
+
 It is created for the [#Hack20 International Flutter Hackathon](https://flutterhackathon.com) in 2020.
-<br/>
+
 The user interface design of the Retrotrack consists of:
 - [AuthScreen](https://github.com/grandnexus/retrotrack/blob/master/lib/ui/screens/auth_screen.dart): The auth login screen of the app.
 - [CameraScreen](https://github.com/grandnexus/retrotrack/blob/master/lib/ui/screens/camera_screen.dart): The camera screen with interactive preview widgets.
