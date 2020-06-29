@@ -2,6 +2,7 @@
 <a href="https://youtu.be/42XTS2c7Grw" target="_blank"><img src='/screenshots/thumbnail.jpg' width='700' alt="Retrotrack Demo Video"/></a>
 
 <a href="https://youtu.be/42XTS2c7Grw" target="_blank">Retrotrack Demo Video</a>
+<a href="https://github.com/grandnexus/retrotrack/blob/master/builds/android/retrotrack.apk" target="_blank">Retrotrack Android APK</a>
 
 ### Co-developed by Jason Choo (@grandnexus) and Philip Ch'ng (@pczn0327).
 
