@@ -109,6 +109,7 @@ Future<LogEntry> processCropFaceImage(File imageFile) async {
 
     final Directory directory = await getExternalStorageDirectory();
     final String path = directory.path;
+    await Directory('$path/images').create(recursive: true);
     final String imagePath = '$path/images/${generateId()}.png';
     File(imagePath).writeAsBytesSync(jpgInt);
 
@@ -195,6 +196,7 @@ Future<Temperature> processThermometerImage(File imageFile) async {
       croppedImage = Image.memory(jpgInt as Uint8List);
       final Directory directory = await getExternalStorageDirectory();
       final String path = directory.path;
+      await Directory('$path/images').create(recursive: true);
       croppedImagePath = '$path/images/${generateId()}.png';
       File(croppedImagePath).writeAsBytesSync(jpgInt);
     }
