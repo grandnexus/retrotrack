@@ -1,5 +1,6 @@
 # Retrotrack: A retro ML-powered mass facial tracking app to record temperatures within seconds by capturing a welfie photo and thermometer screen result.
 <a href="https://youtu.be/42XTS2c7Grw" target="_blank"><img src='/screenshots/thumbnail.jpg' width='700' alt="Retrotrack Demo Video"/></a>
+
 <a href="https://youtu.be/42XTS2c7Grw" target="_blank">Retrotrack Demo Video</a>
 
 ### Co-developed by Jason Choo (@grandnexus) and Philip Ch'ng (@pczn0327).
