@@ -20,7 +20,7 @@ It is created for the [#Hack20 International Flutter Hackathon](https://flutterh
 The user interface design of the Retrotrack consists of:
 - [AuthScreen](https://github.com/grandnexus/retrotrack/blob/master/lib/ui/screens/auth_screen.dart): The auth login screen of the app.
 - [CameraScreen](https://github.com/grandnexus/retrotrack/blob/master/lib/ui/screens/camera_screen.dart): The camera screen with interactive preview widgets.
-- [FeedScreen](hhttps://github.com/grandnexus/retrotrack/blob/master/lib/ui/screens/feed_screen.dart): The feed screen to show the list of log entry with detected faces and temperatures.
+- [FeedScreen](https://github.com/grandnexus/retrotrack/blob/master/lib/ui/screens/feed_screen.dart): The feed screen to show the list of log entry with detected faces and temperatures.
 
 The model classes of the Retrotrack consists of:
 - [LogEntry](https://github.com/grandnexus/retrotrack/blob/master/lib/core/models/log_entry.dart): The model class to represent a log entry.
