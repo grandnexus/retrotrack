@@ -9,7 +9,7 @@
 
 Retrotrack is a [Flutter](https://flutter.dev) retro facial temperature tracking app built in futuristic fashion powered by [Firebase Machine Learning](https://firebase.google.com/docs/ml).
 
-The app is developed to empower mass temperature tracking within minutes. All you have to do is take a selfie or welfie photo and capture the snapshot of each person's temperature result from a thermometer screen.
+The app is developed to empower mass temperature tracking within seconds. All you have to do is take a selfie or welfie photo and capture the snapshot of each person's temperature result from a thermometer screen.
 
 Since we have to take our temperatures everyday and during our visits to different location, Retrotrack makes temperature taking fun and easy. This app can be used in both private and public spaces such as shopping malls, workplaces, schools and even private events.
 
