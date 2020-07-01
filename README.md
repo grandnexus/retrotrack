@@ -32,9 +32,9 @@ The provider classes of the Retrotrack consists of:
 - [FeedProvider](https://github.com/grandnexus/retrotrack/blob/master/lib/core/providers/feed_provider.dart): The provider class to control the feed list logic.
 - [SessionProvider](https://github.com/grandnexus/retrotrack/blob/master/lib/core/providers/session_provider.dart): The provider class to control the login auth logic.
 
-The utility classes of the Retrotrack consists of:
-- [Paints](https://github.com/grandnexus/retrotrack/blob/master/lib/core/paints.dart): The utility class to draw face detected bounding box on the images.
-- [Utils](https://github.com/grandnexus/retrotrack/blob/master/lib/core/utils.dart): The utility class to process images using Firebase Machine Learning and Image packages.
+The utility functions of the Retrotrack consists of:
+- [Paints](https://github.com/grandnexus/retrotrack/blob/master/lib/core/paints.dart): The utility function to draw face detected bounding box on the images.
+- [Utils](https://github.com/grandnexus/retrotrack/blob/master/lib/core/utils.dart): The utility functions to process images using Firebase Machine Learning and Image packages.
 
 ## Project Dependencies
 The Retrotrack app uses the following technology stack with various Flutter packages:
